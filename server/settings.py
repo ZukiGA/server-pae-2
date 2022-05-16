@@ -97,7 +97,6 @@ DATABASES = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-    'server-pae.postgres.database.azure.com'
 ]
 
 ##
