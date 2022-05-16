@@ -89,15 +89,15 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'pae',
-        'USER': env('DATABASE_USER'),
-        'PASSWORD': env('DATABASE_PASSWORD'),
-        'HOST': 'localhost',
-        'PORT': '',
+        'USER': env('AZURE_POSTGRESQL_USER'),
+        'PASSWORD': env('AZURE_POSTGRESQL_PASS'),
+        'HOST': 'server-pae.postgres.database.azure.com',
+        'PORT': '5432',
     }
 }
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000'
+    'server-pae.postgres.database.azure.com'
 ]
 
 ##
