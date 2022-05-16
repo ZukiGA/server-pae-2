@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-@xx)a!cg-79-*6cx%&(nr82*w)1xn^#qo)n#leun&zbj%n&*es
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [env('AZURE_POSTGRESQL_HOST')]
 
 
 # Application definition
