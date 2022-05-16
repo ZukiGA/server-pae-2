@@ -88,10 +88,10 @@ WSGI_APPLICATION = 'server.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'pae',
+        'NAME': env('AZURE_POSTGRESQL_NAME'),
         'USER': env('AZURE_POSTGRESQL_USER'),
-        'PASSWORD': env('AZURE_POSTGRESQL_PASS'),
-        'HOST': 'server-pae.postgres.database.azure.com',
+        'PASSWORD': env('AZURE_POSTGRESQL_PASSWORD'),
+        'HOST': env('AZURE_POSTGRESQL_HOST'),
         'PORT': '5432',
     }
 }
