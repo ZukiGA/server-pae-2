@@ -33,7 +33,7 @@ class LoginTutee(ObtainAuthToken):
 				'message': "Successful login" 
 			}, status=status.HTTP_201_CREATED)
 		else:
-			return Response({'error': 'Username or password is incorrect'})		 
+			return Response({'error': 'Username or password is incorrect'}, status=status.HTTP_401_UNAUTHORIZED)		 
 		
 
 class LoginTutor(APIView):
