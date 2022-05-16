@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-@xx)a!cg-79-*6cx%&(nr82*w)1xn^#qo)n#leun&zbj%n&*es
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['server-pae.azurewebsites.net']
 
 
 # Application definition
@@ -88,11 +88,11 @@ WSGI_APPLICATION = 'server.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'pae',
-        'USER': env('DATABASE_USER'),
-        'PASSWORD': env('DATABASE_PASSWORD'),
-        'HOST': 'localhost',
-        'PORT': '',
+        'NAME': env('AZURE_POSTGRESQL_NAME'),
+        'USER': env('AZURE_POSTGRESQL_USER'),
+        'PASSWORD': env('AZURE_POSTGRESQL_PASSWORD'),
+        'HOST': env('AZURE_POSTGRESQL_HOST'),
+        'PORT': '5432',
     }
 }
 
@@ -101,6 +101,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 # CORS_ALLOWED_ORIGINS = [
 #     'http://localhost:3000'
 # ]
+
 
 ##
 
