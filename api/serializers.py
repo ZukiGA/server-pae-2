@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.core import exceptions
-from .models import Schedule, User, Tutee, Tutor, Subject
+from .models import Schedule, SubjectTutor, User, Tutee, Tutor, Subject
 import django.contrib.auth.password_validation as password_validators 
 
 import re
@@ -68,27 +68,38 @@ class ScheduleSerializer(serializers.ModelSerializer):
 		model = Schedule
 		fields = ('period', 'day_week', 'hour')
 
+class SubjectTutorSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = SubjectTutor
+		fields = ('subject',)
+
 class TutorRegisterSerializer(serializers.ModelSerializer):
 	user = UserSerializer(required=True)
 	schedules = ScheduleSerializer(many=True)
+	subjects = SubjectTutorSerializer(many=True)
 
 	class Meta:
 		model = Tutor
-		fields = ('user', 'registration_number', 'email', 'name', 'completed_hours', 'schedules',)
+		fields = ('user', 'registration_number', 'email', 'name', 'completed_hours', 'schedules', 'subjects',)
 		read_only_fields = ('completed_hours', 'registration_number')
 
 	def create(self, validated_data):
-		unique_identifier = 'tutor' + validated_data['registration_number']
 		registration_number = validated_data['email'][:9]
+		unique_identifier = 'tutor' + registration_number 
 
-		user = User.objects.create_user(unique_identifier, validated_data['user']['name'], validated_data['user']['password'])
+		user = User.objects.create_user(unique_identifier, validated_data['user']['password'])
 		user.is_tutor = True
 		user.save()
-		tutor = Tutor.objects.create(user=user, registration_number = registration_number, email=validated_data['email'])
+		tutor = Tutor.objects.create(user=user, registration_number = registration_number, email=validated_data['email'], name=validated_data['name'])
 
 		schedules_data = validated_data.pop('schedules')
-		for schedule_data in schedules_data:
-			Schedule.objects.create(tutor=tutor, **schedule_data)
+		for schedule in schedules_data:
+			Schedule.objects.create(tutor=tutor, **schedule)
+
+		subjects_data = validated_data.pop('subjects')
+		for subject in subjects_data:
+			SubjectTutor.objects.create(tutor=tutor, **subject)
+
 		return tutor
 
 
