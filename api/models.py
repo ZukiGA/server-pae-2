@@ -63,12 +63,8 @@ class Tutee(models.Model):
 	name = models.CharField(max_length=255)
 	registration_number = models.TextField(max_length=9, primary_key=True)
 
-
-
 class Schedule(models.Model):
-	# PERIOD_CHOICES = [1, 2, 3]
-	# DAY_WEEK_CHOICES = [1, 2, 3, 4, 5]
-	# HOUR_CHOICES = [x for x in range(7, 18)]  #[7, 17]
+
 	tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE)
 	period = models.PositiveSmallIntegerField(null=False)
 	day_week = models.PositiveSmallIntegerField(null=False)
