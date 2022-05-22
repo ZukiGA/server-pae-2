@@ -23,6 +23,7 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
 	unique_identifier = models.CharField(max_length=20, primary_key=True)
+	is_validated = models.BooleanField(default=False)
 	is_superuser = models.BooleanField(default=False)
 	is_staff = models.BooleanField(default=False)
 	is_tutor = models.BooleanField(default=False)
@@ -39,6 +40,7 @@ class Tutor(models.Model):
 	name = models.CharField(max_length=255)
 	registration_number = models.TextField(max_length=9, primary_key=True)
 	completed_hours = models.IntegerField(default=0)
+	is_active = models.BooleanField(default=False)
 
 	@property
 	def schedules(self):
