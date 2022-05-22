@@ -18,6 +18,22 @@ class UserSerializer(serializers.ModelSerializer):
 			},
 		}
 
+class ResetPasswordEmailSerializer(serializers.Serializer):
+	email = serializers.EmailField()
+	user_type = serializers.IntegerField()
+
+class ResetPasswordTokenSerializer(serializers.Serializer):
+	token = serializers.CharField()
+	new_password = serializers.CharField()
+	ui64 = serializers.CharField()
+
+	def validate_new_password(self, value):
+		try:
+			password_validators.validate_password(password=value)
+		except exceptions.ValidationError as e:
+			raise serializers.ValidationError({"password": list(e)})
+		return value 
+
 
 class TuteeRegisterSerializer(serializers.ModelSerializer):
 	user = UserSerializer(required=True)

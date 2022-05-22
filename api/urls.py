@@ -11,5 +11,7 @@ router.register('subject', views.SubjectViewSet)
 urlpatterns = [
 	path('', include(router.urls)),
 	path('logintutee/', views.LoginTutee.as_view()),
-	path('logintutor/', views.LoginTutor.as_view())
+	path('logintutor/', views.LoginTutor.as_view()),
+	path('resetpassword/', views.ResetPasswordEmail.as_view()),
+	path('changepassword/', views.ResetPasswordToken.as_view())
 ]
