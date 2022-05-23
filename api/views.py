@@ -29,19 +29,34 @@ class SubjectViewSet(viewsets.ModelViewSet):
 	serializer_class = serializers.SubjectSerializer
 	queryset = Subject.objects.all()
 
-class LoginTutee(ObtainAuthToken):
+class Login(ObtainAuthToken):
 	def post(self, request):
 		login_serializer = self.serializer_class(data=request.data, context = {'request': request})
 		if login_serializer.is_valid():
 			user = login_serializer.validated_data['user']
-			token, created = Token.objects.get_or_create(user = user)
+			token, _ = Token.objects.get_or_create(user = user)
 			return Response({
 				'token': token.key,
 				'user': str(user),
 				'message': "Successful login" 
 			}, status=status.HTTP_201_CREATED)
 		else:
-			return Response({'message': 'Username or password is incorrect'}, status=status.HTTP_401_UNAUTHORIZED)		 
+			return Response({'message': 'Username or password is incorrect'}, status=status.HTTP_401_UNAUTHORIZED)
+
+class Logout(APIView):
+	serializer_class = serializers.LogoutSerializer
+	def post(self, request):
+		serializer = self.serializer_class(data=request.data)
+		if serializer.is_valid(raise_exception=True):
+			token = serializer.validated_data.get('token')
+			if Token.objects.filter(key = token).exists():
+				token = Token.objects.get(key = token)
+				token.delete()
+
+				return Response({"token": "Token successfully deleted"}, status=status.HTTP_200_OK)
+			else:
+				return Response({"token": "No such token"}, status=status.HTTP_400_BAD_REQUEST)
+
 class ResetPasswordEmail(APIView):
 	serializer_class = serializers.ResetPasswordEmailSerializer
 	def post(self, request):
@@ -94,26 +109,3 @@ class ResetPasswordToken(APIView):
 					return Response({"token": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
 			else:
 				return Response({"user": "No such user"}, status=status.HTTP_400_BAD_REQUEST)
-
-
-class LoginTutor(APIView):
-	serializer_class = serializers.LoginSerializer
-	def post(self, request):
-		registration_number = request.data['registration_number']
-		password = request.data['password']
-
-		tutor = Tutor.objects.filter(registration_number=registration_number).exists()
-		if tutor:
-			unique_identifier = "tutor" + registration_number
-			user = User.objects.get(unique_identifier=unique_identifier)
-			if user.check_password(password):
-				return Response({"user": "logged in"}, status=status.HTTP_200_OK)
-			return Response({"Error": "wrong password"}, status=status.HTTP_401_UNAUTHORIZED)
-		tutor = Tutor.objects.filter(email=registration_number).exists()
-		if tutor:
-			unique_identifier = "tutor" + registration_number
-			user = User.objects.get(unique_identifier=unique_identifier)
-			if user.check_password(password):
-				return Response({"user": "logged in"}, status=status.HTTP_200_OK)
-			return Response({"Error": "wrong password"}, status=status.HTTP_401_UNAUTHORIZED)
-		return Response({"Error": "wrong user"}, status=status.HTTP_401_UNAUTHORIZED)

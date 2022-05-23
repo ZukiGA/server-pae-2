@@ -32,7 +32,10 @@ class ResetPasswordTokenSerializer(serializers.Serializer):
 			password_validators.validate_password(password=value)
 		except exceptions.ValidationError as e:
 			raise serializers.ValidationError({"password": list(e)})
-		return value 
+		return value
+
+class LogoutSerializer(serializers.Serializer):
+	token = serializers.CharField() 
 
 
 class TuteeRegisterSerializer(serializers.ModelSerializer):
@@ -168,9 +171,4 @@ class SubjectSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Subject
 		fields = ('code', 'name', 'semester')
-
-class LoginSerializer(serializers.Serializer):
-	registration_number = serializers.CharField(max_length=20)
-	password = serializers.CharField(max_length=50)
-
 
