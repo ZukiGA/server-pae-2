@@ -3,7 +3,8 @@ from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authtoken.views import ObtainAuthToken
-from .models import Tutee, Tutor, User, Subject
+from .models import Tutee, Tutor, Tutoring, User, Subject
+from rest_framework.permissions import IsAuthenticated 
 
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
@@ -109,3 +110,8 @@ class ResetPasswordToken(APIView):
 					return Response({"token": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
 			else:
 				return Response({"user": "No such user"}, status=status.HTTP_400_BAD_REQUEST)
+
+class TutoringViewSet(viewsets.ModelViewSet):
+	serializer_class = serializers.TutoringSerializer
+	queryset = Tutoring.objects.all()
+	# permission_classes = (IsAuthenticated,)
