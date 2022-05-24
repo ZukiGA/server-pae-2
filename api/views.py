@@ -117,7 +117,7 @@ class TutoringViewSet(viewsets.ModelViewSet):
 	# permission_classes = (IsAuthenticated,)
 
 class ChangePassword(APIView):
-	# permission_classes = (IsAuthenticated,)
+	permission_classes = (IsAuthenticated,)
 	serializer_class = serializers.ChangePasswordSerializer
 	def patch(self, request):
 		serializer = self.serializer_class(data=request.data, context = {'request': request})
