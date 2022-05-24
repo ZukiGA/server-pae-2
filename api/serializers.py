@@ -1,3 +1,4 @@
+from dataclasses import field
 from rest_framework import serializers
 from django.core import exceptions
 from .models import Schedule, SubjectTutor, Tutoring, User, Tutee, Tutor, Subject
@@ -24,6 +25,23 @@ class UserSerializer(serializers.ModelSerializer):
 class ResetPasswordEmailSerializer(serializers.Serializer):
 	email = serializers.EmailField()
 	user_type = serializers.IntegerField()
+
+class ChangePasswordSerializer(serializers.Serializer):
+	password = serializers.CharField()
+	new_password = serializers.CharField()
+	confirm_new_password = serializers.CharField()
+
+	def validate_new_password(self, value):
+		try:
+			password_validators.validate_password(password=value)
+		except exceptions.ValidationError as e:
+			raise serializers.ValidationError({"password": list(e)})
+		return value
+
+	def validate(self, data):
+		if data['new_password'] != data['confirm_new_password']:
+			raise serializers.ValidationError({"confirm_new_password": "new password and confirm new password do not match"})
+		return data
 
 class ResetPasswordTokenSerializer(serializers.Serializer):
 	token = serializers.CharField()

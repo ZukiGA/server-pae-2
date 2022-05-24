@@ -1,5 +1,5 @@
 from django.urls import reverse
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, mixins
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authtoken.views import ObtainAuthToken
@@ -105,7 +105,7 @@ class ResetPasswordToken(APIView):
 						return Response({"new_password": "Your are using the same password"}, status=status.HTTP_400_BAD_REQUEST)
 					user.set_password(new_password)
 					user.save()
-					return Response({"message": "Password was resetted successfully"})
+					return Response({"message": "Password was resetted successfully"}, status=status.HTTP_200_OK)
 				else:
 					return Response({"token": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
 			else:
@@ -115,3 +115,23 @@ class TutoringViewSet(viewsets.ModelViewSet):
 	serializer_class = serializers.TutoringSerializer
 	queryset = Tutoring.objects.all()
 	# permission_classes = (IsAuthenticated,)
+
+class ChangePassword(APIView):
+	# permission_classes = (IsAuthenticated,)
+	serializer_class = serializers.ChangePasswordSerializer
+	def patch(self, request):
+		serializer = self.serializer_class(data=request.data, context = {'request': request})
+		if serializer.is_valid(raise_exception=True):
+			user = serializer.context['request'].user
+			password = serializer.validated_data.get('password')
+			new_password = serializer.validated_data.get('new_password')
+			if user.check_password(new_password):
+				return Response({"new_password": "the new password is the same as the old password"}, status=status.HTTP_400_BAD_REQUEST)
+			if not user.check_password(password):
+				return Response({"password": "the password provided is incorrect"}, status=status.HTTP_401_UNAUTHORIZED)
+			user.set_password(new_password)
+			user.save()
+			return  Response({"message": "password changed successfully"}, status=status.HTTP_200_OK)
+
+
+
