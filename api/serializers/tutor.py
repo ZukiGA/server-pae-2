@@ -3,11 +3,9 @@ from django.core import exceptions
 from api.models import Schedule, SubjectTutor, User, Tutor, Subject
 import django.contrib.auth.password_validation as password_validators
 from .user import UserSerializer
+from api.constants import HOUR_CHOICES, PERIOD_CHOICES, DAY_WEEK_CHOICES, NAME_RE, EMAIL_RE
 
 import re
-
-HOUR_CHOICES = [x for x in range(7, 18)]  #[7, 17]
-PERIOD_CHOICES = [0, 1, 2]
 
 class SubjectTutorSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -55,13 +53,13 @@ class TutorRegisterSerializer(serializers.ModelSerializer):
 
 	def validate_name(self, value):
 		normalized_name = value.strip()
-		if not re.search("^[a-zA-Zñá-úÁ-Úü]([.](?![.])|[ ](?![ .])|[a-zA-Zñá-úÁ-Úü])*$", normalized_name):
+		if not re.search(NAME_RE, normalized_name):
 			raise serializers.ValidationError("Name must be valid")
 		return normalized_name
 
 	def validate_email(self, value):
 		normalized_email = value.lower()
-		if not re.search("^a[0-9]{8}@tec.mx", normalized_email):
+		if not re.search(EMAIL_RE, normalized_email):
 			raise serializers.ValidationError("Must be a valid tec email")
 		return normalized_email
 
@@ -70,7 +68,6 @@ class TutorRegisterSerializer(serializers.ModelSerializer):
 		# if len(value) >= MIN_SCHEDULES:
 		# 	raise serializers.ValidationError(f"The quantity of schedules must greater or equal to ${MIN_SCHEDULES}.")
 
-		DAY_WEEK_CHOICES = [0, 1, 2, 3, 4]
 		for schedule in value:
 			if schedule['period'] not in PERIOD_CHOICES:
 				raise serializers.ValidationError({"Choice of period is incorrect"})

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.core import exceptions
-from api.models import Schedule, SubjectTutor, Tutoring, User, Tutee, Tutor, Subject
+from api.models import User
 import django.contrib.auth.password_validation as password_validators 
 
 HOUR_CHOICES = [x for x in range(7, 18)]  #[7, 17]
@@ -10,8 +10,8 @@ class UserSerializer(serializers.ModelSerializer):
 	confirm_password = serializers.CharField(write_only=True,  style={'input_type': 'password'})
 	class Meta:
 		model = User
-		fields = ('unique_identifier', 'is_staff', 'is_tutor', 'is_tutee', 'password', 'confirm_password',)
-		read_only_fields = ('unique_identifier', 'is_staff', 'is_tutor', 'is_tutee',)
+		fields = ('unique_identifier', 'is_staff', 'is_tutor', 'is_student', 'password', 'confirm_password',)
+		read_only_fields = ('unique_identifier', 'is_staff', 'is_tutor', 'is_student',)
 		extra_kwargs = {
 			'password': {
 				'write_only': True,

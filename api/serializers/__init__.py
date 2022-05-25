@@ -1,4 +1,4 @@
 from .user import *
-from .tutee import *
+from .student import *
 from .tutor import *
 from .tutoring import *

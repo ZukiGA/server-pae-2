@@ -7,7 +7,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 router = DefaultRouter()
-router.register('tutee', views.TuteeViewSet)
+router.register('student', views.StudentViewSet)
 router.register('tutor', views.TutorViewSet)
 router.register('subject', views.SubjectViewSet)
 router.register('tutoring', views.TutoringViewSet)

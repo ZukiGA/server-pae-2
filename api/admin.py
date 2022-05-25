@@ -5,4 +5,4 @@ from . import models
 
 admin.site.register(models.User)
 admin.site.register(models.Tutor)
-admin.site.register(models.Tutee)
+admin.site.register(models.Student)

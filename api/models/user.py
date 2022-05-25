@@ -21,7 +21,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 	is_superuser = models.BooleanField(default=False)
 	is_staff = models.BooleanField(default=False)
 	is_tutor = models.BooleanField(default=False)
-	is_tutee = models.BooleanField(default=False)
+	is_student = models.BooleanField(default=False)
 
 	objects = UserManager()
 
@@ -31,6 +31,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 	def role_account(self):
 		if self.is_tutor:
 			return self.tutor
-		if self.is_tutee:
-			return self.tutee
+		if self.is_student:
+			return self.student
 		#TODO admin

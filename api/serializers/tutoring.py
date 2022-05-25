@@ -1,15 +1,13 @@
 from rest_framework import serializers
-from django.core import exceptions
-from api.models import Schedule, SubjectTutor, Tutoring, User, Tutee, Tutor, Subject
-import django.contrib.auth.password_validation as password_validators 
+from api.models import Tutoring
 
-HOUR_CHOICES = [x for x in range(7, 18)]  #[7, 17]
+from api.constants import HOUR_CHOICES 
 
 class TutoringSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Tutoring
 		fields = ('__all__')
-		read_only_fields = ('tutee', 'status')
+		read_only_fields = ('student', 'status')
 
 	def create(self, validated_data):
 		tutee = self.context['request'].user.role_account

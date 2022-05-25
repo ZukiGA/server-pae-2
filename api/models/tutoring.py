@@ -1,9 +1,8 @@
 from django.db import models
 from .tutor import Tutor, Subject
-from .tutee import Tutee
+from .student import Student 
 
-def upload_to(instance, filename):
-	return 'tutoring/{filename}'.format(filename=filename)
+from api.utils import upload_to
 
 class Tutoring(models.Model):
 	class StatusTutoring(models.TextChoices):
@@ -12,7 +11,7 @@ class Tutoring(models.Model):
 		COMPLETED = 'CO', 'Completed'
 
 	tutor = models.ForeignKey(Tutor, null=True, on_delete=models.SET_NULL)
-	tutee = models.ForeignKey(Tutee, null=True, on_delete=models.SET_NULL)
+	student = models.ForeignKey(Student, null=True, on_delete=models.SET_NULL)
 	subject = models.ForeignKey(Subject, null=True, on_delete=models.SET_NULL)
 	date = models.DateField()
 	hour = models.PositiveIntegerField()
