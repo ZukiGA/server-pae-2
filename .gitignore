@@ -109,3 +109,6 @@ venv/
 # Migrations
 migrations/
 __pycache__/
+
+#Media
+media/
