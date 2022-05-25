@@ -86,7 +86,7 @@ class ResetPasswordToken(APIView):
 			if not PasswordResetTokenGenerator().check_token(user, token):
 				return Response({"token": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
 			if user.check_password(new_password):
-				return Response({"new_password": "Your are using the same password"}, status=status.HTTP_400_BAD_REQUEST)
+				return Response({"new_password": "You are using the same password"}, status=status.HTTP_400_BAD_REQUEST)
 			user.set_password(new_password)
 			user.save()
 			return Response({"message": "Password was resetted successfully"}, status=status.HTTP_200_OK)
