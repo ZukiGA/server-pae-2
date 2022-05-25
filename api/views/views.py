@@ -3,7 +3,7 @@ from rest_framework import viewsets, status, mixins
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authtoken.views import ObtainAuthToken
-from .models import Tutee, Tutor, Tutoring, User, Subject
+from api.models import Tutee, Tutor, Tutoring, User, Subject
 from rest_framework.permissions import IsAuthenticated 
 
 from rest_framework.authtoken.models import Token
@@ -13,7 +13,7 @@ from django.utils.encoding import smart_bytes, smart_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 import environ
 
-from . import serializers
+from api import serializers
 
 env = environ.Env()
 environ.Env.read_env()
@@ -53,7 +53,6 @@ class Logout(APIView):
 			if Token.objects.filter(key = token).exists():
 				token = Token.objects.get(key = token)
 				token.delete()
-
 				return Response({"token": "Token successfully deleted"}, status=status.HTTP_200_OK)
 			else:
 				return Response({"token": "No such token"}, status=status.HTTP_400_BAD_REQUEST)
@@ -84,7 +83,7 @@ class ResetPasswordEmail(APIView):
 		relative_link = "change-password/?" + "uid=" + ui64 + "&token=" + token
 		url = env('FRONTEND_URL') + relative_link
 		print(token, ui64, url)
-		# send_mail('Por favor cambia tu password', "Cambiar password", None, [email], html_message=f'<a href="{url}">Cambiar password</a>')
+		send_mail('Por favor cambia tu password', "Cambiar password", None, [email], html_message=f'<a href="{url}">Cambiar password</a>')
 		return Response({"message": "An email has been sent"}, status=status.HTTP_201_CREATED)
 
 
@@ -132,6 +131,3 @@ class ChangePassword(APIView):
 			user.set_password(new_password)
 			user.save()
 			return  Response({"message": "password changed successfully"}, status=status.HTTP_200_OK)
-
-
-
