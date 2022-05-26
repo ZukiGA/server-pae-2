@@ -8,6 +8,7 @@ class TutoringSerializer(serializers.ModelSerializer):
 		model = Tutoring
 		fields = ('__all__')
 		read_only_fields = ('student', 'status')
+		depth = 1
 
 	def create(self, validated_data):
 		tutee = self.context['request'].user.role_account
