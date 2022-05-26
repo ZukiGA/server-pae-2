@@ -13,7 +13,7 @@ class StudentRegisterSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Student 
 		fields = ('user', 'registration_number', 'email', 'name')
-		read_only_fields = ('registration_number')
+		read_only_fields = ('registration_number',)
 
 	def create(self, validated_data):
 		registration_number = validated_data['email'][:9]
