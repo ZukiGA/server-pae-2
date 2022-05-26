@@ -3,15 +3,27 @@ from api.models import Tutoring, Schedule
 
 from api.constants import HOUR_CHOICES 
 
-class ParamsTutoringSerializer(serializers.Serializer):
-	subject = serializers.CharField()
-	# date = serializers.DateField()
+from django.utils.encoding import smart_bytes
+from django.utils.http import urlsafe_base64_encode
 
-class AvailableTutoring(serializers.ModelSerializer):
-	class Meta:
-		model = Schedule
-		fields = ('__all__')
-		depth = 1
+class ParamsAvailableTutoringSerializer(serializers.Serializer):
+	subject = serializers.CharField()
+	date = serializers.DateField()
+
+class AvailableTutoring(object):
+	def __init__(self, date, hour, period, tutor):
+		self.date = date
+		self.hour = hour
+		self.period = period
+		#encode registration number of tutor to avoid identification
+		# self.tutor = urlsafe_base64_encode(smart_bytes(tutor.registration_number))
+		self.tutor = tutor.registration_number
+
+class AvailableTutoringSerializer(serializers.Serializer):
+	date = serializers.DateField()
+	hour = serializers.IntegerField()
+	period = serializers.IntegerField()
+	tutor = serializers.CharField()
 
 class TutoringSerializer(serializers.ModelSerializer):
 	class Meta:
