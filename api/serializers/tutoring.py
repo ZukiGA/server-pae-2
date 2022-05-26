@@ -1,7 +1,17 @@
 from rest_framework import serializers
-from api.models import Tutoring
+from api.models import Tutoring, Schedule
 
 from api.constants import HOUR_CHOICES 
+
+class ParamsTutoringSerializer(serializers.Serializer):
+	subject = serializers.CharField()
+	# date = serializers.DateField()
+
+class AvailableTutoring(serializers.ModelSerializer):
+	class Meta:
+		model = Schedule
+		fields = ('__all__')
+		depth = 1
 
 class TutoringSerializer(serializers.ModelSerializer):
 	class Meta:
