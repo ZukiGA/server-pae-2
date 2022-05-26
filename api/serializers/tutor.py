@@ -29,13 +29,13 @@ class TutorRegisterSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Tutor
-		fields = ('user', 'registration_number', 'email', 'name', 'completed_hours', 'schedules', 'subjects',)
+		fields = ('user', 'registration_number', 'email', 'name', 'completed_hours', 'schedules', 'subjects', 'is_active')
 		read_only_fields = ('completed_hours', 'registration_number')
 
 	def create(self, validated_data):
 		registration_number = validated_data['email'][:9]
 		unique_identifier = 'tutor' + registration_number 
-
+		
 		user = User.objects.create_user(unique_identifier, validated_data['user']['password'])
 		user.is_tutor = True
 		user.save()
