@@ -63,7 +63,7 @@ class ResetPasswordEmail(APIView):
 
 			ui64 = urlsafe_base64_encode(smart_bytes(user.unique_identifier))
 			token = PasswordResetTokenGenerator().make_token(user)
-			relative_link = "change-password/?" + "uid=" + ui64 + "&token=" + token
+			relative_link = "reset-password/?" + "uid=" + ui64 + "&token=" + token
 			url = env('FRONTEND_URL') + relative_link
 			# print(token, ui64, url)
 			send_mail('Por favor cambia tu password', "Cambiar password", None, [email], html_message=f'<a href="{url}">Cambiar password</a>')
