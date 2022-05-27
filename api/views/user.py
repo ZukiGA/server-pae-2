@@ -24,7 +24,7 @@ class Login(ObtainAuthToken):
 			token, _ = Token.objects.get_or_create(user = user)
 			return Response({
 				'token': token.key,
-				'user': str(user),
+				'user': user.role_account.name,
 				'message': "Successful login" 
 			}, status=status.HTTP_201_CREATED)
 		return Response({'message': 'Username or password is incorrect'}, status=status.HTTP_401_UNAUTHORIZED)
