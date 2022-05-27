@@ -11,8 +11,8 @@ class TutoringSerializer(serializers.ModelSerializer):
 		depth = 1
 
 	def create(self, validated_data):
-		tutee = self.context['request'].user.role_account
-		return Tutoring.objects.create(tutee = tutee, **validated_data)
+		student = self.context['request'].user.role_account
+		return Tutoring.objects.create(student = student, **validated_data)
 
 	def validate_tutor(self, value):
 		if value is None:

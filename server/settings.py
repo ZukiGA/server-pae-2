@@ -162,5 +162,9 @@ REST_FRAMEWORK = {
     ]
 }
 
+SIMPLE_JWT = {
+    'USER_ID_FIELD': 'unique_identifier',
+}
+
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'

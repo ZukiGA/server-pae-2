@@ -1,11 +1,20 @@
 from rest_framework import serializers
 from django.core import exceptions
+from django.core.mail import send_mail
 from api.models import Schedule, SubjectTutor, User, Tutor, Subject
 import django.contrib.auth.password_validation as password_validators
 from .user import UserSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
+
 from api.constants import HOUR_CHOICES, PERIOD_CHOICES, DAY_WEEK_CHOICES, NAME_RE, EMAIL_RE
 
 import re
+import datetime
+
+import environ
+
+env = environ.Env()
+environ.Env.read_env()
 
 class SubjectTutorSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -36,18 +45,33 @@ class TutorRegisterSerializer(serializers.ModelSerializer):
 		registration_number = validated_data['email'][:9]
 		unique_identifier = 'tutor' + registration_number 
 		
+		#create a user for that tutor
 		user = User.objects.create_user(unique_identifier, validated_data['user']['password'])
 		user.is_tutor = True
 		user.save()
+
+		#create the tutor
 		tutor = Tutor.objects.create(user=user, registration_number = registration_number, email=validated_data['email'], name=validated_data['name'])
 
+		#create schedules for that user
 		schedules_data = validated_data.pop('schedules')
 		for schedule in schedules_data:
 			Schedule.objects.create(tutor=tutor, **schedule)
 
+		#create subjects for that user
 		subjects_data = validated_data.pop('subjects')
 		for subject in subjects_data:
 			SubjectTutor.objects.create(tutor=tutor, **subject)
+
+		#create a token for activating the account
+		token = RefreshToken.for_user(user)
+		token.set_exp(lifetime=datetime.timedelta(days=10))
+		access_token = token.access_token
+		print("token", access_token)
+		relative_link = "activate-account/?" + "token=" + str(access_token)
+		url = env('FRONTEND_URL') + relative_link
+		# send_mail("Activa tu cuenta", "Activar cuenta", None, [validated_data["email"]], html_message=f'<a href="{url}">Activar cuenta</a>')
+		send_mail("Activa tu cuenta", "Activar cuenta", None, ["a01731065@tec.mx"], html_message=f'<a href="{url}">Activar cuenta</a>')
 
 		return tutor
 
@@ -92,4 +116,7 @@ class TutorRegisterSerializer(serializers.ModelSerializer):
 		except exceptions.ValidationError as e:
 			raise serializers.ValidationError({"password": list(e)})
 		return data
+
+class VerifyEmailSerializer(serializers.Serializer):
+	token = serializers.CharField()
 

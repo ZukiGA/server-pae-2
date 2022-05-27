@@ -1,11 +1,20 @@
 from rest_framework import serializers
 from django.core import exceptions
 from api.models import User, Student
+from django.core.mail import send_mail
 import django.contrib.auth.password_validation as password_validators 
 from . import UserSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
+
 from api.constants import NAME_RE, EMAIL_RE
 
 import re
+import datetime
+
+import environ
+
+env = environ.Env()
+environ.Env.read_env()
 
 class StudentRegisterSerializer(serializers.ModelSerializer):
 	user = UserSerializer(required=True)
@@ -23,6 +32,17 @@ class StudentRegisterSerializer(serializers.ModelSerializer):
 		user.is_student = True
 		user.save()
 		student = Student.objects.create(user=user, registration_number = registration_number, email=validated_data['email'], name=validated_data['name'])
+
+		#create a token for activating the account
+		token = RefreshToken.for_user(user)
+		token.set_exp(lifetime=datetime.timedelta(days=10))
+		access_token = token.access_token
+		print("token", access_token)
+		relative_link = "activate-account/?" + "token=" + str(access_token)
+		url = env('FRONTEND_URL') + relative_link
+		# send_mail("Activa tu cuenta", "Activar cuenta", None, [validated_data["email"]], html_message=f'<a href="{url}">Activar cuenta</a>')
+		send_mail("Activa tu cuenta", "Activar cuenta", None, ["a01731065@tec.mx"], html_message=f'<a href="{url}">Activar cuenta</a>')
+
 		return student 
 
 	def validate_name(self, value):
