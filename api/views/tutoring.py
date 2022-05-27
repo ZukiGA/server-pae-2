@@ -29,7 +29,7 @@ class AvailableTutorings(APIView):
 			#TODO: made function for the 3 periods
 			#TODO: change hard-coded dates to dates of a period
 			initial_date, final_date = datetime.date(2022, 5, 16), datetime.date(2022, 6, 17) #hard-coded dates
-			initial_date = max(date.today()+1, initial_date)
+			initial_date = max(date.today()+datetime.timedelta(days=1), initial_date)
 			delta = final_date - initial_date
 			third_period = [initial_date + datetime.timedelta(days=i) for i in range(delta.days + 1)] 
 			days_by_week = {}
@@ -45,10 +45,10 @@ class AvailableTutorings(APIView):
 			for schedule in schedules_tutors:
 				for date_in_period in days_by_week[schedule.day_week]:
 				#TODO: validate tutor and student are the same person
-					available_tutorings.append(AvailableTutoring(date=date_in_period, hour=schedule.hour, period=schedule.period, tutor=schedule.tutor))
-							
+					available_tutorings.append(AvailableTutoring(date=date_in_period, hour=schedule.hour, period=schedule.period, tutor=schedule.tutor))						
 
-			#TODO: sort by date and hour
+			available_tutorings.sort(key=lambda x: (x.date, x.hour))
+
 			return Response(AvailableTutoringSerializer(available_tutorings, many=True).data)
 
 
