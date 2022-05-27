@@ -117,6 +117,11 @@ class TutorRegisterSerializer(serializers.ModelSerializer):
 			raise serializers.ValidationError({"password": list(e)})
 		return data
 
+class TutorIsAccepted(serializers.ModelSerializer):
+	class Meta:
+		model = Tutor
+		fields = ('is_accepted',)
+
 class VerifyEmailSerializer(serializers.Serializer):
 	token = serializers.CharField()
 

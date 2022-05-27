@@ -1,16 +1,25 @@
 from rest_framework import viewsets, status
 from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView
+from rest_framework.mixins import UpdateModelMixin
 from rest_framework.response import Response
 from api.models import  Tutor, Subject, User
 from rest_framework.authtoken.models import Token
 import jwt
 
-from api.serializers import TutorRegisterSerializer, SubjectSerializer, VerifyEmailSerializer
+from api.serializers import TutorRegisterSerializer, SubjectSerializer, VerifyEmailSerializer, TutorIsAccepted
 from server.settings import SECRET_KEY
 
 class TutorViewSet(viewsets.ModelViewSet):
 	serializer_class = TutorRegisterSerializer
 	queryset = Tutor.objects.all()
+
+class TutorIsAccepted(GenericAPIView, UpdateModelMixin):
+	serializer_class = TutorIsAccepted
+	queryset = Tutor.objects.all()
+
+	def put(self, request, *args, **kwargs):
+		return self.partial_update(request, *args, **kwargs)
 
 class SubjectViewSet(viewsets.ModelViewSet):
 	serializer_class = SubjectSerializer
