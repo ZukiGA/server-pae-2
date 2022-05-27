@@ -8,6 +8,7 @@ class Tutor(models.Model):
 	registration_number = models.TextField(max_length=9, primary_key=True)
 	completed_hours = models.IntegerField(default=0)
 	is_active = models.BooleanField(default=False)
+	is_accepted = models.BooleanField(default=False)
 
 	@property
 	def schedules(self):
