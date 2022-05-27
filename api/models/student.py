@@ -6,3 +6,4 @@ class Student(models.Model):
 	email = models.EmailField(max_length=255, unique=True)
 	name = models.CharField(max_length=255)
 	registration_number = models.TextField(max_length=9, primary_key=True)
+	is_active = models.BooleanField(default=False)
