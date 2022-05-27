@@ -38,7 +38,7 @@ class TutorRegisterSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Tutor
-		fields = ('user', 'registration_number', 'email', 'name', 'completed_hours', 'schedules', 'subjects', 'is_active')
+		fields = ('user', 'registration_number', 'email', 'name', 'completed_hours', 'schedules', 'subjects', 'is_active', 'is_accepted')
 		read_only_fields = ('completed_hours', 'registration_number')
 
 	def create(self, validated_data):
