@@ -42,14 +42,20 @@ class AvailableTutorings(APIView):
 					available_tutorings[date_in_period] = []
 					days_by_week[date_in_period.weekday()].append(date_in_period)	
 
-			
+
 
 			for schedule in schedules_tutors:
 				for date_in_period in days_by_week[schedule.day_week]:
 					available_tutorings[date_in_period].append(AvailableTutoring(hour=schedule.hour, period=schedule.period, tutor=schedule.tutor))
 					#TODO: validate tutor and student are not the same person
 
-			#TODO: validate time and tutor are not already taken 
+			tutorings_with_same_tutors = Tutoring.objects.filter(tutor__in=tutors_with_subject)
+			for tutoring in tutorings_with_same_tutors:
+				print(tutoring.date)
+				if tutoring.date in available_tutorings:
+					available_tutorings[tutoring.date] = list(filter(lambda x: x.hour != tutoring.hour or x.tutor != tutoring.tutor.registration_number, available_tutorings[tutoring.date]))
+
+
 			list_available_tutorings = []
 			for available_tutoring in available_tutorings.items():
 				list_available_tutorings.append({"date": available_tutoring[0], "tutorings": available_tutoring[1]})
