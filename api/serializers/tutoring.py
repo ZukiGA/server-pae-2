@@ -8,11 +8,11 @@ from django.utils.http import urlsafe_base64_encode
 
 class ParamsAvailableTutoringSerializer(serializers.Serializer):
 	subject = serializers.CharField()
-	date = serializers.DateField()
+	initial_date_serializer = serializers.DateField()
+	final_date_serializer = serializers.DateField()
 
 class AvailableTutoring(object):
-	def __init__(self, date, hour, period, tutor):
-		self.date = date
+	def __init__(self, hour, period, tutor):
 		self.hour = hour
 		self.period = period
 		#encode registration number of tutor to avoid identification
@@ -20,10 +20,13 @@ class AvailableTutoring(object):
 		self.tutor = tutor.registration_number
 
 class AvailableTutoringSerializer(serializers.Serializer):
+		hour = serializers.IntegerField()
+		period = serializers.IntegerField()
+		tutor = serializers.CharField()
+
+class AvailableTutoringSerializerList(serializers.Serializer):
 	date = serializers.DateField()
-	hour = serializers.IntegerField()
-	period = serializers.IntegerField()
-	tutor = serializers.CharField()
+	tutorings = AvailableTutoringSerializer(many=True)
 
 class TutoringSerializer(serializers.ModelSerializer):
 	class Meta:
