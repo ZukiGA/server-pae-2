@@ -1,14 +1,15 @@
 from django.db import models
 from .tutor import Tutor, Subject
-from .student import Student 
+from .student import Student
 
 from api.utils import upload_to
 
+
 class Tutoring(models.Model):
-	class StatusTutoring(models.TextChoices):
-		PENDING = 'PE', 'Pending'
-		APPROVED = 'AP', 'Approved'
-		COMPLETED = 'CO', 'Completed'
+    class StatusTutoring(models.TextChoices):
+        PENDING = 'PE', 'Pending'
+        APPROVED = 'AP', 'Approved'
+        COMPLETED = 'CO', 'Completed'
 
 	tutor = models.ForeignKey(Tutor, null=True, on_delete=models.SET_NULL)
 	student = models.ForeignKey(Student, null=True, on_delete=models.SET_NULL)
@@ -21,3 +22,12 @@ class Tutoring(models.Model):
 	topic = models.CharField(max_length=255)
 	doubt = models.TextField(null=True)
 	file = models.ImageField('images', upload_to=upload_to, null=True)
+
+
+class Period(models.Model):
+    beginning_first_period = models.DateField()
+    ending_first_period = models.DateField()
+    beginning_second_period = models.DateField()
+    ending_second_period = models.DateField()
+    beginning_third_period = models.DateField()
+    ending_third_period = models.DateField()
