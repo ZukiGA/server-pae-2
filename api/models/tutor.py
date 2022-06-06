@@ -19,6 +19,11 @@ class Tutor(models.Model):
 	def subjects(self):
 		return self.subjecttutor_set.all()
 
+	def delete(self, *args, **kwargs):
+		super().delete(*args, **kwargs)
+		if self.user:
+			self.user.delete()
+
 class Subject(models.Model):
 	code = models.TextField(max_length=9, primary_key=True)
 	name = models.CharField(max_length=255, null=False)

@@ -33,3 +33,8 @@ class TutoringSerializer(serializers.ModelSerializer):
 		if data["doubt"] is None and data["file"] is None:
 			raise serializers.ValidationError({"doubt": "there must a doubt or a file"})
 		return data
+
+class ChangeTutoringLocationSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Tutoring
+		fields = ('is_online', 'place',)

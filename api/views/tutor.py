@@ -7,7 +7,7 @@ from api.models import  Tutor, Subject, User
 from rest_framework.authtoken.models import Token
 import jwt
 
-from api.serializers import TutorRegisterSerializer, SubjectSerializer, VerifyEmailSerializer, TutorIsAccepted
+from api.serializers import TutorRegisterSerializer, SubjectSerializer, VerifyEmailSerializer, TutorIsAcceptedSerializer
 from server.settings import SECRET_KEY
 
 class TutorViewSet(viewsets.ModelViewSet):
@@ -15,7 +15,7 @@ class TutorViewSet(viewsets.ModelViewSet):
 	queryset = Tutor.objects.all()
 
 class TutorIsAccepted(GenericAPIView, UpdateModelMixin):
-	serializer_class = TutorIsAccepted
+	serializer_class = TutorIsAcceptedSerializer
 	queryset = Tutor.objects.all()
 
 	def put(self, request, *args, **kwargs):
