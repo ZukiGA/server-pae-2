@@ -7,7 +7,9 @@ class Tutor(models.Model):
 	name = models.CharField(max_length=255)
 	registration_number = models.TextField(max_length=9, primary_key=True)
 	completed_hours = models.IntegerField(default=0)
+	major = models.CharField(max_length=4)
 	is_active = models.BooleanField(default=False)
+	is_accepted = models.BooleanField(default=False)
 
 	@property
 	def schedules(self):
@@ -16,6 +18,11 @@ class Tutor(models.Model):
 	@property
 	def subjects(self):
 		return self.subjecttutor_set.all()
+
+	def delete(self, *args, **kwargs):
+		super().delete(*args, **kwargs)
+		if self.user:
+			self.user.delete()
 
 class Subject(models.Model):
 	code = models.TextField(max_length=9, primary_key=True)

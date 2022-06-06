@@ -11,6 +11,9 @@ router.register('student', views.StudentViewSet)
 router.register('tutor', views.TutorViewSet)
 router.register('subject', views.SubjectViewSet)
 router.register('tutoring', views.TutoringViewSet)
+router.register('administrator', views.AdministratorViewSet)
+router.register('question', views.QuestionViewSet)
+router.register('poll', views.PollViewSet)
 
 urlpatterns = [
 	path('', include(router.urls)),
@@ -20,6 +23,10 @@ urlpatterns = [
 	path('changepasswordtoken/', views.ResetPasswordToken.as_view()),
 	path('changepassword/', views.ChangePassword.as_view()),
 	path('availabletutoring/', views.AvailableTutorings.as_view())
+	path('verifyemail/', views.VerifyEmail.as_view()),
+	path('tutorisaccepted/<pk>', views.TutorIsAccepted.as_view()),
+	path('pollresult/', views.PollResults.as_view())
+
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

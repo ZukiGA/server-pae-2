@@ -10,7 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
 	confirm_password = serializers.CharField(write_only=True,  style={'input_type': 'password'})
 	class Meta:
 		model = User
-		fields = ('unique_identifier', 'is_staff', 'is_tutor', 'is_student', 'password', 'confirm_password',)
+		fields = ('unique_identifier', 'is_staff', 'is_tutor', 'is_student', 'is_administrator','password', 'confirm_password',)
 		read_only_fields = ('unique_identifier', 'is_staff', 'is_tutor', 'is_student',)
 		extra_kwargs = {
 			'password': {

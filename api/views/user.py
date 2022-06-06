@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authtoken.views import ObtainAuthToken
-from api.models import Student, Tutor,  User
+from api.models import Student, Tutor, User
 from rest_framework.permissions import IsAuthenticated 
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
@@ -24,7 +24,7 @@ class Login(ObtainAuthToken):
 			token, _ = Token.objects.get_or_create(user = user)
 			return Response({
 				'token': token.key,
-				'user': str(user),
+				'user': user.role_account.name,
 				'message': "Successful login" 
 			}, status=status.HTTP_201_CREATED)
 		return Response({'message': 'Username or password is incorrect'}, status=status.HTTP_401_UNAUTHORIZED)
@@ -63,7 +63,7 @@ class ResetPasswordEmail(APIView):
 
 			ui64 = urlsafe_base64_encode(smart_bytes(user.unique_identifier))
 			token = PasswordResetTokenGenerator().make_token(user)
-			relative_link = "change-password/?" + "uid=" + ui64 + "&token=" + token
+			relative_link = "reset-password/?" + "uid=" + ui64 + "&token=" + token
 			url = env('FRONTEND_URL') + relative_link
 			# print(token, ui64, url)
 			send_mail('Por favor cambia tu password', "Cambiar password", None, [email], html_message=f'<a href="{url}">Cambiar password</a>')
@@ -86,7 +86,7 @@ class ResetPasswordToken(APIView):
 			if not PasswordResetTokenGenerator().check_token(user, token):
 				return Response({"token": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
 			if user.check_password(new_password):
-				return Response({"new_password": "Your are using the same password"}, status=status.HTTP_400_BAD_REQUEST)
+				return Response({"new_password": "You are using the same password"}, status=status.HTTP_400_BAD_REQUEST)
 			user.set_password(new_password)
 			user.save()
 			return Response({"message": "Password was resetted successfully"}, status=status.HTTP_200_OK)
