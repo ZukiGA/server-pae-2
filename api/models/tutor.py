@@ -7,6 +7,7 @@ class Tutor(models.Model):
 	name = models.CharField(max_length=255)
 	registration_number = models.TextField(max_length=9, primary_key=True)
 	completed_hours = models.IntegerField(default=0)
+	major = models.CharField(max_length=4)
 	is_active = models.BooleanField(default=False)
 	is_accepted = models.BooleanField(default=False)
 

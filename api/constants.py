@@ -4,3 +4,4 @@ DAY_WEEK_CHOICES = [0, 1, 2, 3, 4]
 
 NAME_RE = "^[a-zA-Zñá-úÁ-Úü]([.](?![.])|[ ](?![ .])|[a-zA-Zñá-úÁ-Úü])*$"
 EMAIL_RE = "^a[0-9]{8}@tec.mx"
+MAJOR_RE = "^[A-Z]*$"

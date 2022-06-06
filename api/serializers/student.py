@@ -6,11 +6,10 @@ import django.contrib.auth.password_validation as password_validators
 from . import UserSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from api.constants import NAME_RE, EMAIL_RE
+from api.constants import NAME_RE, EMAIL_RE, MAJOR_RE
 
 import re
 import datetime
-
 import environ
 
 env = environ.Env()
@@ -21,8 +20,8 @@ class StudentRegisterSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Student 
-		fields = ('user', 'registration_number', 'email', 'name')
-		read_only_fields = ('registration_number',)
+		fields = ('user', 'registration_number', 'email', 'name', 'major', 'is_active')
+		read_only_fields = ('registration_number', 'is_active')
 
 	def create(self, validated_data):
 		registration_number = validated_data['email'][:9]
@@ -31,7 +30,7 @@ class StudentRegisterSerializer(serializers.ModelSerializer):
 		user = User.objects.create_user(unique_identifier, validated_data['user']['password'])
 		user.is_student = True
 		user.save()
-		student = Student.objects.create(user=user, registration_number = registration_number, email=validated_data['email'], name=validated_data['name'])
+		student = Student.objects.create(user=user, registration_number = registration_number, email=validated_data['email'], major=validated_data['major'], name=validated_data['name'])
 
 		#create a token for activating the account
 		token = RefreshToken.for_user(user)
@@ -56,6 +55,14 @@ class StudentRegisterSerializer(serializers.ModelSerializer):
 		if not re.search(EMAIL_RE, normalized_email):
 			raise serializers.ValidationError("Must be a valid tec email")
 		return normalized_email
+
+	def validate_major(self, value):
+		normalized_major = value.upper()
+		if not re.search(MAJOR_RE, normalized_major):
+			raise serializers.ValidationError("Must contain only letters")
+		if len(normalized_major) < 2:
+			raise serializers.ValidationError("Must be longer than 2 letters")
+		return normalized_major
 		
 	def validate(self, data):
 		password = data.get('user').get('password')
