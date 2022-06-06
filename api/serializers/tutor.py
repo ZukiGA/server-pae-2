@@ -6,11 +6,10 @@ import django.contrib.auth.password_validation as password_validators
 from .user import UserSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from api.constants import HOUR_CHOICES, PERIOD_CHOICES, DAY_WEEK_CHOICES, NAME_RE, EMAIL_RE
+from api.constants import HOUR_CHOICES, PERIOD_CHOICES, DAY_WEEK_CHOICES, NAME_RE, EMAIL_RE, MAJOR_RE
 
 import re
 import datetime
-
 import environ
 
 env = environ.Env()
@@ -38,8 +37,8 @@ class TutorRegisterSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Tutor
-		fields = ('user', 'registration_number', 'email', 'name', 'completed_hours', 'schedules', 'subjects', 'is_active', 'is_accepted')
-		read_only_fields = ('completed_hours', 'registration_number')
+		fields = ('user', 'registration_number', 'email', 'name', 'major', 'completed_hours', 'schedules', 'subjects', 'is_active', 'is_accepted')
+		read_only_fields = ('completed_hours', 'registration_number', 'is_active', 'is_accepted',)
 
 	def create(self, validated_data):
 		registration_number = validated_data['email'][:9]
@@ -51,7 +50,7 @@ class TutorRegisterSerializer(serializers.ModelSerializer):
 		user.save()
 
 		#create the tutor
-		tutor = Tutor.objects.create(user=user, registration_number = registration_number, email=validated_data['email'], name=validated_data['name'])
+		tutor = Tutor.objects.create(user=user, registration_number = registration_number, email=validated_data['email'], name=validated_data['name'], major=validated_data['major'])
 
 		#create schedules for that user
 		schedules_data = validated_data.pop('schedules')
@@ -86,6 +85,14 @@ class TutorRegisterSerializer(serializers.ModelSerializer):
 		if not re.search(EMAIL_RE, normalized_email):
 			raise serializers.ValidationError("Must be a valid tec email")
 		return normalized_email
+
+	def validate_major(self, value):
+		normalized_major = value.upper()
+		if not re.search(MAJOR_RE, normalized_major):
+			raise serializers.ValidationError("Must contain only letters")
+		if len(normalized_major) < 2:
+			raise serializers.ValidationError("Must be longer than 2 letters")
+		return normalized_major
 
 	def validate_schedules(self, value):
 		# MIN_SCHEDULES = 5
