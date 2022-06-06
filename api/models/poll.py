@@ -4,7 +4,7 @@ from .tutoring import Tutoring
 CHOICES = [(i,i) for i in range(1, 5)]
 
 class Poll(models.Model):
-	tutoring = models.OneToOneField(Tutoring, null=True, on_delete=models.CASCADE)
+	tutoring = models.OneToOneField(Tutoring, on_delete=models.CASCADE)
 	comment = models.TextField()
 
 	@property
@@ -12,8 +12,8 @@ class Poll(models.Model):
 		return self.questionpoll_set.all()
 
 	@property
-	def get_average(self):
-		return QuestionPoll.objects.filter(poll = self.pk)
+	def tutor(self):
+		return self.tutoring.tutor
 
 class Question(models.Model):
 	body = models.TextField()
