@@ -17,6 +17,7 @@ class Tutoring(models.Model):
 	hour = models.PositiveIntegerField()
 	status = models.CharField(max_length=2, choices=StatusTutoring.choices, default=StatusTutoring.PENDING)
 	is_online = models.BooleanField()
+	place = models.CharField(max_length=55)
 	topic = models.CharField(max_length=255)
 	doubt = models.TextField(null=True)
 	file = models.ImageField('images', upload_to=upload_to, null=True)
