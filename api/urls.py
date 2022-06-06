@@ -11,6 +11,9 @@ router.register('student', views.StudentViewSet)
 router.register('tutor', views.TutorViewSet)
 router.register('subject', views.SubjectViewSet)
 router.register('tutoring', views.TutoringViewSet)
+router.register('administrator', views.AdministratorViewSet)
+router.register('question', views.QuestionViewSet)
+router.register('poll', views.PollViewSet)
 
 urlpatterns = [
 	path('', include(router.urls)),
