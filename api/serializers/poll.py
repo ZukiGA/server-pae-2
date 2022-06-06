@@ -20,6 +20,14 @@ class QuestionPollSerializer(serializers.ModelSerializer):
 		fields = ('question_id', 'question', 'result',)
 		depth = 1
 
+class ResultSerializer(serializers.Serializer):
+	result = serializers.IntegerField()
+	total = serializers.IntegerField()
+
+
+class PollResultsSerializer(serializers.Serializer):
+	question = QuestionSerializer()
+	results = ResultSerializer(many=True)
 
 class PollSerializer(serializers.ModelSerializer):
 	question_polls = QuestionPollSerializer(many=True)

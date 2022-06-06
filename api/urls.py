@@ -23,7 +23,8 @@ urlpatterns = [
 	path('changepasswordtoken/', views.ResetPasswordToken.as_view()),
 	path('changepassword/', views.ChangePassword.as_view()),
 	path('verifyemail/', views.VerifyEmail.as_view()),
-	path('tutorisaccepted/<pk>', views.TutorIsAccepted.as_view())
+	path('tutorisaccepted/<pk>', views.TutorIsAccepted.as_view()),
+	path('pollresult/', views.PollResults.as_view())
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
