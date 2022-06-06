@@ -87,8 +87,8 @@ class AvailableTutorings(APIView):
 class TutoringViewSet(viewsets.ModelViewSet):
     serializer_class = TutoringSerializer
     queryset = Tutoring.objects.all()
-	permission_classes = (IsAuthenticatedOrReadOnly,)
-	filter_fields = ('status',)
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+    filter_fields = ('status',)
 
 class ChangeTutoringLocation(GenericAPIView, UpdateModelMixin):
 	serializer_class = ChangeTutoringLocationSerializer

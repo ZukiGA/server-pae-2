@@ -6,10 +6,10 @@ from api.utils import upload_to
 
 
 class Tutoring(models.Model):
-    class StatusTutoring(models.TextChoices):
-        PENDING = 'PE', 'Pending'
-        APPROVED = 'AP', 'Approved'
-        COMPLETED = 'CO', 'Completed'
+	class StatusTutoring(models.TextChoices):
+		PENDING = 'PE', 'Pending'
+		APPROVED = 'AP', 'Approved'
+		COMPLETED = 'CO', 'Completed'
 
 	tutor = models.ForeignKey(Tutor, null=True, on_delete=models.SET_NULL)
 	student = models.ForeignKey(Student, null=True, on_delete=models.SET_NULL)
