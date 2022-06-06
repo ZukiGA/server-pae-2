@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, filters
 from rest_framework.views import APIView
 from django.db.models import Count
 from api.models import Question, Poll, QuestionPoll
@@ -9,7 +9,7 @@ from api.serializers.poll import PollResultsSerializer
 
 class QuestionViewSet(viewsets.ModelViewSet):
 	serializer_class = QuestionSerializer
-	queryset = Question.objects.all()
+	queryset = Question.objects.all().order_by('id')
 
 class PollViewSet(viewsets.ModelViewSet):
 	serializer_class = PollSerializer
