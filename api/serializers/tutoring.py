@@ -62,4 +62,4 @@ class TutoringSerializer(serializers.ModelSerializer):
 class ChangeTutoringLocationSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Tutoring
-		fields = ()
+		fields = ('is_online', 'place',)

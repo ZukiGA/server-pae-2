@@ -91,9 +91,8 @@ class TutoringViewSet(viewsets.ModelViewSet):
 	filter_fields = ('status',)
 
 class ChangeTutoringLocation(GenericAPIView, UpdateModelMixin):
-	serializer_class = ChangeTutoringLocationSerializer()
+	serializer_class = ChangeTutoringLocationSerializer
 	queryset = Tutoring.objects.all()
 
-	def put(self, request):
-		return self.partial_update(request)
-
+	def put(self, request, *args, **kwargs):
+		return self.partial_update(request, *args, **kwargs)
