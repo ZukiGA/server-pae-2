@@ -67,7 +67,7 @@ class AvailableTutorings(APIView):
                     for schedule in schedules_tutors:
                         if schedule.period == current_period+1:
                             for date_in_period in days_by_week[schedule.day_week]:
-                                available_tutorings[date_in_period].append(AvailableTutoring(hour=schedule.hour, period=schedule.period, tutor=schedule.tutor))
+                                available_tutorings[date_in_period].append(AvailableTutoring(hour=schedule.hour, period=schedule.period, tutor=schedule.tutor, isOnline=True))
                                 # TODO: validate tutor and student are not the same person
 
                     #eliminates if there is already a tutoring at that time and with the same tutor

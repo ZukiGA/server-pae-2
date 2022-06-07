@@ -12,17 +12,19 @@ class ParamsAvailableTutoringSerializer(serializers.Serializer):
 	final_date_serializer = serializers.DateField()
 
 class AvailableTutoring(object):
-	def __init__(self, hour, period, tutor):
+	def __init__(self, hour, period, tutor, isOnline):
 		self.hour = hour
 		self.period = period
 		#encode registration number of tutor to avoid identification
 		# self.tutor = urlsafe_base64_encode(smart_bytes(tutor.registration_number))
 		self.tutor = tutor.registration_number
+		self.isOnline = isOnline
 
 class AvailableTutoringSerializer(serializers.Serializer):
 		hour = serializers.IntegerField()
 		period = serializers.IntegerField()
 		tutor = serializers.CharField()
+		isOnline = serializers.BooleanField()
 
 class AvailableTutoringSerializerList(serializers.Serializer):
 	date = serializers.DateField()
