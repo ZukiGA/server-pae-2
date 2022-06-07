@@ -56,7 +56,7 @@ class AvailableTutorings(APIView):
                     #split dates by day of the week
                     days_by_week = {}
                     available_tutorings = {}
-                    for i in range(1, 6):
+                    for i in range(0, 6):
                         days_by_week[i] = []
                     for date_in_period in current_period_dates:
                         if date_in_period.weekday() >= 0 and date_in_period.weekday() <= 4:
@@ -87,8 +87,8 @@ class AvailableTutorings(APIView):
 class TutoringViewSet(viewsets.ModelViewSet):
     serializer_class = TutoringSerializer
     queryset = Tutoring.objects.all()
-	permission_classes = (IsAuthenticatedOrReadOnly,)
-	filter_fields = ('status',)
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+    filter_fields = ('status',)
 
 class ChangeTutoringLocation(GenericAPIView, UpdateModelMixin):
 	serializer_class = ChangeTutoringLocationSerializer

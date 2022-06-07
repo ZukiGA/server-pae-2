@@ -10,18 +10,18 @@ class Tutoring(models.Model):
         PENDING = 'PE', 'Pending'
         APPROVED = 'AP', 'Approved'
         COMPLETED = 'CO', 'Completed'
-
-	tutor = models.ForeignKey(Tutor, null=True, on_delete=models.SET_NULL)
-	student = models.ForeignKey(Student, null=True, on_delete=models.SET_NULL)
-	subject = models.ForeignKey(Subject, null=True, on_delete=models.SET_NULL)
-	date = models.DateField()
-	hour = models.PositiveIntegerField()
-	status = models.CharField(max_length=2, choices=StatusTutoring.choices, default=StatusTutoring.PENDING)
-	is_online = models.BooleanField()
-	place = models.CharField(max_length=55)
-	topic = models.CharField(max_length=255)
-	doubt = models.TextField(null=True)
-	file = models.ImageField('images', upload_to=upload_to, null=True)
+    
+    tutor = models.ForeignKey(Tutor, null=True, on_delete=models.SET_NULL)
+    student = models.ForeignKey(Student, null=True, on_delete=models.SET_NULL)
+    subject = models.ForeignKey(Subject, null=True, on_delete=models.SET_NULL)
+    date = models.DateField()
+    hour = models.PositiveIntegerField()
+    status = models.CharField(max_length=2, choices=StatusTutoring.choices, default=StatusTutoring.PENDING)
+    is_online = models.BooleanField()
+    place = models.CharField(max_length=55)
+    topic = models.CharField(max_length=255)
+    doubt = models.TextField(null=True)
+    file = models.ImageField('images', upload_to=upload_to, null=True)
 
 
 class Period(models.Model):
