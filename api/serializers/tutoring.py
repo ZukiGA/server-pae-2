@@ -42,6 +42,7 @@ class TutoringSerializer(serializers.ModelSerializer):
 		return Tutoring.objects.create(student = student, **validated_data)
 
 	def validate_tutor(self, value):
+		print(value)
 		if value is None:
 			raise serializers.ValidationError({"tutor": "tutor cannot be null"})
 		return value
@@ -65,3 +66,8 @@ class ChangeTutoringLocationSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Tutoring
 		fields = ('is_online', 'place',)
+
+class AlternateTutorSerializer(serializers.Serializer):
+	hour = serializers.IntegerField()
+	date = serializers.DateField()
+	subject = serializers.CharField()
