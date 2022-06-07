@@ -55,7 +55,7 @@ class AvailableTutorings(APIView):
                     #split dates by day of the week
                     days_by_week = {}
                     available_tutorings = {}
-                    for i in range(1, 6):
+                    for i in range(0, 6):
                         days_by_week[i] = []
                     for date_in_period in current_period_dates:
                         if date_in_period.weekday() >= 0 and date_in_period.weekday() <= 4:
@@ -66,7 +66,7 @@ class AvailableTutorings(APIView):
                     for schedule in schedules_tutors:
                         if schedule.period == current_period+1:
                             for date_in_period in days_by_week[schedule.day_week]:
-                                available_tutorings[date_in_period].append(AvailableTutoring(hour=schedule.hour, period=schedule.period, tutor=schedule.tutor))
+                                available_tutorings[date_in_period].append(AvailableTutoring(hour=schedule.hour, period=schedule.period, tutor=schedule.tutor, isOnline=True))
                                 # TODO: validate tutor and student are not the same person
 
                     #eliminates if there is already a tutoring at that time and with the same tutor

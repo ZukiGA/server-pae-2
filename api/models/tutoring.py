@@ -5,6 +5,7 @@ from .student import Student
 from api.utils import upload_to
 
 class Tutoring(models.Model):
+
 	class StatusTutoring(models.TextChoices):
 		PENDING = 'PE', 'Pending'
 		APPROVED = 'AP', 'Approved'
@@ -21,7 +22,6 @@ class Tutoring(models.Model):
 	topic = models.CharField(max_length=255)
 	doubt = models.TextField(null=True)
 	file = models.ImageField('images', upload_to=upload_to, null=True)
-
 
 class Period(models.Model):
     beginning_first_period = models.DateField()
