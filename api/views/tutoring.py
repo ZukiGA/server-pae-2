@@ -1,5 +1,4 @@
-import sched
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from api.models import Tutoring
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
@@ -96,3 +95,13 @@ class ChangeTutoringLocation(GenericAPIView, UpdateModelMixin):
 
 	def put(self, request, *args, **kwargs):
 		return self.partial_update(request, *args, **kwargs)
+
+class ConfirmTutoring(APIView):
+    def post(self, request, *args, **kwargs):
+        pk = self.kwargs['pk']
+        if not Tutoring.objects.filter(pk = pk).exists():
+            return Response({"pk": "does not exist"}, status=status.HTTP_404_NOT_FOUND)
+        tutoring = Tutoring.objects.filter(pk = pk).first()
+        tutoring.status = 'AP'
+        tutoring.save()
+        return Response(TutoringSerializer(tutoring).data, status=status.HTTP_200_OK)

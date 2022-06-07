@@ -4,7 +4,6 @@ from .student import Student
 
 from api.utils import upload_to
 
-
 class Tutoring(models.Model):
 	class StatusTutoring(models.TextChoices):
 		PENDING = 'PE', 'Pending'
