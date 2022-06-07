@@ -80,7 +80,12 @@ class ChangeTutoringLocationSerializer(serializers.ModelSerializer):
 		model = Tutoring
 		fields = ('is_online', 'place',)
 
-class AlternateTutorSerializer(serializers.Serializer):
+class ParamsAlternateTutorSerializer(serializers.Serializer):
 	hour = serializers.IntegerField()
 	date = serializers.DateField()
 	subject = serializers.CharField()
+
+class AlternateTutorSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Tutor
+		fields = ('registration_number', 'name', 'completed_hours', 'major',)

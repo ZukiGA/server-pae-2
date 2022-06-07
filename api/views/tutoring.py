@@ -8,7 +8,7 @@ from api.serializers import TutoringSerializer, ParamsAvailableTutoringSerialize
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import UpdateModelMixin
 
-from api.serializers.tutoring import ChangeTutoringLocationSerializer, AlternateTutorSerializer
+from api.serializers.tutoring import ChangeTutoringLocationSerializer, ParamsAlternateTutorSerializer, AlternateTutorSerializer
 
 import datetime
 
@@ -87,7 +87,7 @@ class AvailableTutorings(APIView):
 #tutors with that date and hour
 #tutoring not already taken
 class AlternateTutor(APIView):
-    serializer_class = AlternateTutorSerializer
+    serializer_class = ParamsAlternateTutorSerializer
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid(raise_exception=True):
@@ -119,22 +119,23 @@ class AlternateTutor(APIView):
 
             #removes tutors with a tutoring in such date and hour
             tutoring_same_time = Tutoring.objects.filter(date=date, hour=hour)
-            print(tutoring_same_time[0].tutor)
-            # tutors_with_tutoring = set()
-            # for tutoring in tutoring_same_time:
-            #     print(tutoring.tutor.registration_number)
+            tutors_with_tutoring = set()
+            for tutoring in tutoring_same_time:
+                tutors_with_tutoring.add(tutoring.tutor.registration_number)
+            print(tutors_with_tutoring)
 
-            print(tutors_with_schedule)
-
-
+            available_tutors = []
+            for tutor in tutors_with_schedule:
+                if tutor.registration_number not in tutors_with_tutoring:
+                    available_tutors.append(tutor)
             
-            return Response({"hello": "world"})
+            return Response(AlternateTutorSerializer(available_tutors, many=True).data)
 
 
 class TutoringViewSet(viewsets.ModelViewSet):
     serializer_class = TutoringSerializer
     queryset = Tutoring.objects.all()
-    # permission_classes = (IsAuthenticatedOrReadOnly,)
+    permission_classes = (IsAuthenticatedOrReadOnly,)
     filter_fields = ('status',)
 
 class ChangeTutoringLocation(GenericAPIView, UpdateModelMixin):
