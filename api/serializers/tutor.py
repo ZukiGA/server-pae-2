@@ -23,7 +23,7 @@ class SubjectTutorSerializer(serializers.ModelSerializer):
 class SubjectTutorSerializerRegister(serializers.ModelSerializer):
 	class Meta:
 		model = SubjectTutor
-		fields = ('subject')
+		fields = ('subject',)
 
 class SubjectSerializer(serializers.ModelSerializer):
 	class Meta:
