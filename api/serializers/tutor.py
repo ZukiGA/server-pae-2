@@ -19,6 +19,11 @@ class SubjectTutorSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = SubjectTutor
 		fields = ('subject', 'tutor')
+		
+class SubjectTutorSerializerRegister(serializers.ModelSerializer):
+	class Meta:
+		model = SubjectTutor
+		fields = ('subject')
 
 class SubjectSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -33,7 +38,7 @@ class ScheduleSerializer(serializers.ModelSerializer):
 class TutorRegisterSerializer(serializers.ModelSerializer):
 	user = UserSerializer(required=True)
 	schedules = ScheduleSerializer(many=True)
-	subjects = SubjectTutorSerializer(many=True)
+	subjects = SubjectTutorSerializerRegister(many=True)
 
 	class Meta:
 		model = Tutor
