@@ -9,13 +9,9 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import UpdateModelMixin
 
 from api.serializers.tutoring import ChangeTutoringLocationSerializer, ParamsAlternateTutorSerializer, AlternateTutorSerializer
+from api.constants import START_DATE_FIELDS, END_DATE_FIELDS
 
 import datetime
-
-#constants for lookup in Period table
-START_DATE_FIELDS = ["beginning_first_period", "beginning_second_period", "beginning_third_period"]
-END_DATE_FIELDS = ["ending_first_period", "ending_second_period", "ending_third_period"]
-
 
 class AvailableTutorings(APIView):
     serializer_class = ParamsAvailableTutoringSerializer
@@ -131,7 +127,7 @@ class AlternateTutor(APIView):
 class TutoringViewSet(viewsets.ModelViewSet):
     serializer_class = TutoringSerializer
     queryset = Tutoring.objects.all()
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+    # permission_classes = (IsAuthenticatedOrReadOnly,)
     filter_fields = ('status','student', 'tutor')
 
 class ChangeTutoringLocation(GenericAPIView, UpdateModelMixin):
