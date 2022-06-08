@@ -12,10 +12,6 @@ from api.serializers.tutoring import ChangeTutoringLocationSerializer, ParamsAlt
 
 import datetime
 
-# find tutors with subject X
-# find schedule of such tutors X
-# filter after date
-
 #constants for lookup in Period table
 START_DATE_FIELDS = ["beginning_first_period", "beginning_second_period", "beginning_third_period"]
 END_DATE_FIELDS = ["ending_first_period", "ending_second_period", "ending_third_period"]

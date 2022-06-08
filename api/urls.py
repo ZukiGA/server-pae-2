@@ -28,7 +28,8 @@ urlpatterns = [
 	path('pollresult/', views.PollResults.as_view()),
 	path('changetutoringlocation/<pk>', views.ChangeTutoringLocation.as_view()),
 	path('confirmtutoring/<pk>', views.ConfirmTutoring.as_view()),
-	path('alternatetutor/', views.AlternateTutor.as_view())
+	path('alternatetutor/', views.AlternateTutor.as_view()),
+	path('subjectbytutor/<tutor>', views.SubjectByTutor.as_view())
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -3,11 +3,12 @@ from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import UpdateModelMixin
 from rest_framework.response import Response
-from api.models import  Tutor, Subject, User
+from api.models import  Tutor, Subject, User, SubjectTutor
 from rest_framework.authtoken.models import Token
 import jwt
 
 from api.serializers import TutorRegisterSerializer, SubjectSerializer, VerifyEmailSerializer, TutorIsAcceptedSerializer
+from api.serializers.tutor import SubjectTutorSerializer
 from server.settings import SECRET_KEY
 
 class TutorViewSet(viewsets.ModelViewSet):
@@ -24,6 +25,15 @@ class TutorIsAccepted(GenericAPIView, UpdateModelMixin):
 class SubjectViewSet(viewsets.ModelViewSet):
 	serializer_class = SubjectSerializer
 	queryset = Subject.objects.all()
+
+class SubjectByTutor(APIView):
+	def get(self, request, *args, **kwargs):
+		tutor = self.kwargs['tutor']
+		subject_tutor = SubjectTutor.objects.filter(tutor = tutor)
+		subjects = []
+		for subject_tutor_object in subject_tutor:
+			subjects.append(subject_tutor_object.subject)
+		return Response(SubjectSerializer(subjects, many=True).data, status=status.HTTP_200_OK)	
 
 class VerifyEmail(APIView):
 	serializer_class = VerifyEmailSerializer
