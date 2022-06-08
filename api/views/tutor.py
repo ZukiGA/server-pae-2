@@ -48,7 +48,7 @@ class SubjectByTutor(APIView):
 			return Response(SubjectTutorSerializer(subject_tutor).data, status=status.HTTP_201_CREATED)
 
 class DestroySubjectByTutor(APIView):
-	def post(self, request, *args, **kwargs):
+	def post(self, request):
 		# tutor = self.kwargs['tutor']
 		# subject = self.kwargs['subject']
 		# if not SubjectTutor.objects.filter(tutor=tutor, subject=subject).exists():
