@@ -3,11 +3,12 @@ from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import UpdateModelMixin
 from rest_framework.response import Response
-from api.models import  Tutor, Subject, User
+from api import serializers
+from api.models import  Tutor, Subject, User, SubjectTutor
 from rest_framework.authtoken.models import Token
 import jwt
 
-from api.serializers import TutorRegisterSerializer, SubjectSerializer, VerifyEmailSerializer, TutorIsAcceptedSerializer
+from api.serializers import TutorRegisterSerializer, SubjectSerializer, VerifyEmailSerializer, TutorIsAcceptedSerializer, SubjectTutorSerializer
 from server.settings import SECRET_KEY
 
 class TutorViewSet(viewsets.ModelViewSet):
@@ -24,6 +25,38 @@ class TutorIsAccepted(GenericAPIView, UpdateModelMixin):
 class SubjectViewSet(viewsets.ModelViewSet):
 	serializer_class = SubjectSerializer
 	queryset = Subject.objects.all()
+
+class SubjectByTutorDetail(APIView):
+	def get(self, request, *args, **kwargs):
+		tutor = self.kwargs['tutor']
+		subject_tutor = SubjectTutor.objects.filter(tutor = tutor)
+		subjects = []
+		for subject_tutor_object in subject_tutor:
+			subjects.append(subject_tutor_object.subject)
+		return Response(SubjectSerializer(subjects, many=True).data, status=status.HTTP_200_OK)	
+
+class SubjectByTutor(APIView):
+	serializer_class = SubjectTutorSerializer
+	def post(self, request):
+		serializer = self.serializer_class(data=request.data)
+		if serializer.is_valid(raise_exception=True):
+			tutor = serializer.validated_data.get("tutor")
+			subject = serializer.validated_data.get("subject")
+			if SubjectTutor.objects.filter(tutor=tutor, subject=subject).exists():
+				return Response({"tutor": "such object already exixsts"}, status=status.HTTP_400_BAD_REQUEST)
+			subject_tutor = SubjectTutor.objects.create(tutor=tutor, subject=subject)
+			return Response(SubjectTutorSerializer(subject_tutor).data, status=status.HTTP_201_CREATED)
+
+	def delete(self, request):
+		serializer = self.serializer_class(data=request.data)
+		if serializer.is_valid(raise_exception=True):
+			tutor = serializer.validated_data.get("tutor")
+			subject = serializer.validated_data.get("subject")
+			if not SubjectTutor.objects.filter(tutor=tutor, subject=subject).exists():
+				return Response({"tutor": "no object with such tutor and subject"}, status=status.HTTP_400_BAD_REQUEST)
+			SubjectTutor.objects.filter(tutor=tutor, subject=subject).delete()
+			return Response({"subject_tutor": "deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+
 
 class VerifyEmail(APIView):
 	serializer_class = VerifyEmailSerializer

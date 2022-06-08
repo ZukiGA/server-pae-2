@@ -18,7 +18,7 @@ environ.Env.read_env()
 class SubjectTutorSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = SubjectTutor
-		fields = ('subject',)
+		fields = ('subject', 'tutor')
 
 class SubjectSerializer(serializers.ModelSerializer):
 	class Meta:
