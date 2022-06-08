@@ -6,6 +6,7 @@ from rest_framework.response import Response
 
 from api.serializers import QuestionSerializer, PollSerializer
 from api.serializers.poll import PollResultsSerializer
+from api.utils import auxSort
 
 class QuestionViewSet(viewsets.ModelViewSet):
 	serializer_class = QuestionSerializer
@@ -14,9 +15,6 @@ class QuestionViewSet(viewsets.ModelViewSet):
 class PollViewSet(viewsets.ModelViewSet):
 	serializer_class = PollSerializer
 	queryset = Poll.objects.all()
-
-def auxSort(dict):
-	return dict['result']
 
 class PollResults(APIView):
 	def get(self, request):
