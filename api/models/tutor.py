@@ -19,6 +19,10 @@ class Tutor(models.Model):
 	def subjects(self):
 		return self.subjecttutor_set.all()
 
+	@property
+	def tutoring(self):
+		return self.tutoring_set.all()
+
 	def delete(self, *args, **kwargs):
 		super().delete(*args, **kwargs)
 		if self.user:

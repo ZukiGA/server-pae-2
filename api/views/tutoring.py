@@ -8,7 +8,7 @@ from api.serializers import TutoringSerializer, ParamsAvailableTutoringSerialize
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import UpdateModelMixin
 
-from api.serializers.tutoring import ChangeTutoringLocationSerializer
+from api.serializers.tutoring import ChangeTutoringLocationSerializer, ParamsAlternateTutorSerializer, AlternateTutorSerializer
 
 import datetime
 
@@ -82,12 +82,61 @@ class AvailableTutorings(APIView):
 
             return Response(AvailableTutoringSerializerList(list_available_tutorings, many=True).data)
 
+#get period from date X
+#tutors with subject X
+#tutors with that date and hour
+#tutoring not already taken
+class AlternateTutor(APIView):
+    serializer_class = ParamsAlternateTutorSerializer
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            subject = serializer.validated_data.get("subject")
+            date = serializer.validated_data.get("date")
+            hour = serializer.validated_data.get("hour")
+
+            day_week = date.weekday()
+
+            #check to which period the date belongs
+            period = Period.objects.filter().first()
+            current_period = -1
+            for i in range(3):
+                start_date, end_date = START_DATE_FIELDS[i], END_DATE_FIELDS[i]
+                initial_date, final_date = period.__dict__[start_date], period.__dict__[end_date]
+                if date >= initial_date and date <= final_date:
+                    current_period = i
+                    break
+            if current_period == -1:
+                return Response({"date": "date not inside any period"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+            #find tutors with such subject
+            tutors_with_subject = Tutor.objects.filter(subjecttutor__subject=subject)
+            #get schedule for such tutors
+            schedules_tutors = Schedule.objects.filter(tutor__in=tutors_with_subject, period=current_period, hour=hour, day_week=day_week)
+            
+            tutors_with_schedule = Tutor.objects.filter(schedule__in=schedules_tutors).order_by("completed_hours").reverse()
+
+            #removes tutors with a tutoring in such date and hour
+            tutoring_same_time = Tutoring.objects.filter(date=date, hour=hour)
+            tutors_with_tutoring = set()
+            for tutoring in tutoring_same_time:
+                tutors_with_tutoring.add(tutoring.tutor.registration_number)
+            print(tutors_with_tutoring)
+
+            available_tutors = []
+            for tutor in tutors_with_schedule:
+                if tutor.registration_number not in tutors_with_tutoring:
+                    available_tutors.append(tutor)
+            
+            return Response(AlternateTutorSerializer(available_tutors, many=True).data)
+
 
 class TutoringViewSet(viewsets.ModelViewSet):
     serializer_class = TutoringSerializer
     queryset = Tutoring.objects.all()
     permission_classes = (IsAuthenticatedOrReadOnly,)
-    filter_fields = ('status',)
+    filter_fields = ('status','student')
 
 class ChangeTutoringLocation(GenericAPIView, UpdateModelMixin):
 	serializer_class = ChangeTutoringLocationSerializer

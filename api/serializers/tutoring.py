@@ -1,10 +1,20 @@
 from rest_framework import serializers
-from api.models import Tutoring, Schedule
+from api.models import Tutoring, Schedule, Tutor, Subject
 
 from api.constants import HOUR_CHOICES 
 
 from django.utils.encoding import smart_bytes
 from django.utils.http import urlsafe_base64_encode
+
+class TutorTutoringSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Tutor
+		fields = ('name', 'registration_number')
+
+class SubjectTutoringSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Subject
+		fields = ('__all__')
 
 class ParamsAvailableTutoringSerializer(serializers.Serializer):
 	subject = serializers.CharField()
@@ -31,9 +41,13 @@ class AvailableTutoringSerializerList(serializers.Serializer):
 	tutorings = AvailableTutoringSerializer(many=True)
 
 class TutoringSerializer(serializers.ModelSerializer):
+	tutor = TutorTutoringSerializer(read_only=True)
+	tutor_id = serializers.PrimaryKeyRelatedField(write_only=True, source='tutor', queryset=Tutor.objects.all())
+	subject = SubjectTutoringSerializer(read_only=True)
+	subject_id = serializers.PrimaryKeyRelatedField(write_only=True, source='subject', queryset=Subject.objects.all())
 	class Meta:
 		model = Tutoring
-		fields = ('__all__')
+		exclude = ()
 		read_only_fields = ('student', 'status')
 		depth = 1
 
@@ -41,7 +55,7 @@ class TutoringSerializer(serializers.ModelSerializer):
 		student = self.context['request'].user.role_account
 		return Tutoring.objects.create(student = student, **validated_data)
 
-	def validate_tutor(self, value):
+	def validate_tutor_id(self, value):
 		if value is None:
 			raise serializers.ValidationError({"tutor": "tutor cannot be null"})
 		return value
@@ -65,3 +79,13 @@ class ChangeTutoringLocationSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Tutoring
 		fields = ('is_online', 'place',)
+
+class ParamsAlternateTutorSerializer(serializers.Serializer):
+	hour = serializers.IntegerField()
+	date = serializers.DateField()
+	subject = serializers.CharField()
+
+class AlternateTutorSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Tutor
+		fields = ('registration_number', 'name', 'completed_hours', 'major',)
