@@ -3,12 +3,11 @@ from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import UpdateModelMixin
 from rest_framework.response import Response
-from api import serializers
-from api.models import  Tutor, Subject, User, SubjectTutor
 from rest_framework.authtoken.models import Token
 import jwt
 
-from api.serializers import TutorRegisterSerializer, SubjectSerializer, VerifyEmailSerializer, TutorIsAcceptedSerializer, SubjectTutorSerializer
+from api.serializers import TutorRegisterSerializer, SubjectSerializer, VerifyEmailSerializer, TutorIsAcceptedSerializer, SubjectTutorSerializer,ModifyScheduleSerializer
+from api.models import  Tutor, Subject, User, SubjectTutor, Schedule
 from server.settings import SECRET_KEY
 
 class TutorViewSet(viewsets.ModelViewSet):
@@ -55,6 +54,19 @@ class SubjectByTutor(APIView):
 				return Response({"tutor": "such object does not exixsts"}, status=status.HTTP_400_BAD_REQUEST)
 			subject_tutor = SubjectTutor.objects.filter(tutor=tutor, subject=subject).delete()
 			return Response({"tutor": "deleted"}, status=status.HTTP_200_OK)
+
+class ModifySchedule(APIView):
+	serializer_class = ModifyScheduleSerializer
+	def post(self, request):
+		serializer = self.serializer_class(data=request.data)
+		if serializer.is_valid(raise_exception=True):
+			tutor = serializer.validated_data.get('tutor')
+			schedules = serializer.validated_data.get('schedules')
+			Schedule.objects.filter(tutor=tutor).delete()
+			for schedule in schedules:
+				Schedule.objects.create(tutor=tutor, **schedule)
+			return Response({"schedule": "schedule updated"}, status=status.HTTP_201_CREATED)
+			
 
 class VerifyEmail(APIView):
 	serializer_class = VerifyEmailSerializer
