@@ -46,22 +46,15 @@ class SubjectByTutor(APIView):
 				return Response({"tutor": "such object already exixsts"}, status=status.HTTP_400_BAD_REQUEST)
 			subject_tutor = SubjectTutor.objects.create(tutor=tutor, subject=subject)
 			return Response(SubjectTutorSerializer(subject_tutor).data, status=status.HTTP_201_CREATED)
-
-class DestroySubjectByTutor(APIView):
-	serializer_class = SubjectTutorSerializer
 	def delete(self, request):
-		try:
-			serializer = self.serializer_class(data=request.data)
-			if serializer.is_valid(raise_exception=True):
-				tutor = serializer.validated_data.get("tutor")
-				subject = serializer.validated_data.get("subject")
-				relation = SubjectTutor.objects.filter(tutor=tutor, subject=subject)
-				if not relation.exists():
-					return Response({"tutor": "no object with such tutor and subject"}, status=status.HTTP_400_BAD_REQUEST)
-				relation.delete()
-				return Response({"subject_tutor": "deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
-		except Exception as e:
-			return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+		serializer = self.serializer_class(data=request.data)
+		if serializer.is_valid(raise_exception=True):
+			tutor = serializer.validated_data.get("tutor")
+			subject = serializer.validated_data.get("subject")
+			if not SubjectTutor.objects.filter(tutor=tutor, subject=subject).exists():
+				return Response({"tutor": "such object does not exixsts"}, status=status.HTTP_400_BAD_REQUEST)
+			subject_tutor = SubjectTutor.objects.filter(tutor=tutor, subject=subject).delete()
+			return Response({"tutor": "deleted"}, status=status.HTTP_200_OK)
 
 class VerifyEmail(APIView):
 	serializer_class = VerifyEmailSerializer
