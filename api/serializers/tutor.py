@@ -1,3 +1,4 @@
+from pyexpat import model
 from rest_framework import serializers
 from django.core import exceptions
 from django.core.mail import send_mail
@@ -133,6 +134,10 @@ class TutorIsAcceptedSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Tutor
 		fields = ('is_accepted',)
+
+class ModifyScheduleSerializer(serializers.Serializer):
+	schedules = ScheduleSerializer(many=True)
+	tutor = serializers.PrimaryKeyRelatedField(queryset=Tutor.objects.all())
 
 class VerifyEmailSerializer(serializers.Serializer):
 	token = serializers.CharField()
