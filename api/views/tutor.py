@@ -60,8 +60,8 @@ class DestroySubjectByTutor(APIView):
 					return Response({"tutor": "no object with such tutor and subject"}, status=status.HTTP_400_BAD_REQUEST)
 				relation.delete()
 				return Response({"subject_tutor": "deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
-			except Exception as e:
-				return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+		except Exception as e:
+			return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class VerifyEmail(APIView):
 	serializer_class = VerifyEmailSerializer
