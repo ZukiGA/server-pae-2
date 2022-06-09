@@ -8,7 +8,7 @@ from api.serializers import TutoringSerializer, ParamsAvailableTutoringSerialize
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import UpdateModelMixin
 
-from api.serializers.tutoring import ChangeTutoringLocationSerializer, ParamsAlternateTutorSerializer, AlternateTutorSerializer
+from api.serializers.tutoring import ChangeTutorSerializer, ChangeTutoringLocationSerializer, ParamsAlternateTutorSerializer, AlternateTutorSerializer
 from api.constants import START_DATE_FIELDS, END_DATE_FIELDS
 
 import datetime
@@ -74,10 +74,6 @@ class AvailableTutorings(APIView):
 
             return Response(AvailableTutoringSerializerList(list_available_tutorings, many=True).data)
 
-#get period from date X
-#tutors with subject X
-#tutors with that date and hour
-#tutoring not already taken
 class AlternateTutor(APIView):
     serializer_class = ParamsAlternateTutorSerializer
     def post(self, request):
@@ -114,7 +110,7 @@ class AlternateTutor(APIView):
             tutors_with_tutoring = set()
             for tutoring in tutoring_same_time:
                 tutors_with_tutoring.add(tutoring.tutor.registration_number)
-            print(tutors_with_tutoring)
+            # print(tutors_with_tutoring)
 
             available_tutors = []
             for tutor in tutors_with_schedule:
@@ -123,6 +119,12 @@ class AlternateTutor(APIView):
             
             return Response(AlternateTutorSerializer(available_tutors, many=True).data)
 
+class ChangeTutor(GenericAPIView, UpdateModelMixin):
+    serializer_class = ChangeTutorSerializer
+    queryset = Tutoring.objects.all()
+
+    def put(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
 
 class TutoringViewSet(viewsets.ModelViewSet):
     serializer_class = TutoringSerializer

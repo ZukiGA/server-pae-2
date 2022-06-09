@@ -1,10 +1,11 @@
 from rest_framework import serializers
-from api.models import Tutoring, Schedule, Tutor, Subject
+from api.models import Tutoring, Schedule, Tutor, Subject, Period
 
-from api.constants import HOUR_CHOICES 
+from api.constants import HOUR_CHOICES, END_DATE_FIELDS, START_DATE_FIELDS 
 
 from django.utils.encoding import smart_bytes
 from django.utils.http import urlsafe_base64_encode
+
 
 class TutorTutoringSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -89,3 +90,36 @@ class AlternateTutorSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Tutor
 		fields = ('registration_number', 'name', 'completed_hours', 'major',)
+
+class ChangeTutorSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Tutoring
+		fields = ('tutor',)
+	
+	def validate_tutor(self, value):
+		tutoring = self.instance
+		tutor = value
+
+		hour = tutoring.hour
+		date = tutoring.date
+		day_week = date.weekday()
+
+		period = Period.objects.filter().first()
+		current_period = -1
+		for i in range(3):
+				start_date, end_date = START_DATE_FIELDS[i], END_DATE_FIELDS[i]
+				initial_date, final_date = period.__dict__[start_date], period.__dict__[end_date]
+				if date >= initial_date and date <= final_date:
+					current_period = i
+					break
+		if current_period == -1:
+				raise serializers.ValidationError({"period": "period does not exist"}) 
+
+		if not Schedule.objects.filter(tutor=tutor.registration_number, hour=hour, period=current_period, day_week=day_week).exists():
+				raise serializers.ValidationError({"schedule": "tutor does not have that schedule"})
+
+		#TODO: check that is not cancelled
+		if Tutoring.objects.filter(tutor=tutor.registration_number, hour=hour, date=date).exists():
+			raise serializers.ValidationError({"tutorign": "tutor already has a tutoring at that time"})
+
+		return tutor 
