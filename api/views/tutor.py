@@ -50,15 +50,18 @@ class SubjectByTutor(APIView):
 class DestroySubjectByTutor(APIView):
 	serializer_class = SubjectTutorSerializer
 	def delete(self, request):
-		serializer = self.serializer_class(data=request.data)
-		if serializer.is_valid(raise_exception=True):
-			tutor = serializer.validated_data.get("tutor")
-			subject = serializer.validated_data.get("subject")
-			relation = SubjectTutor.objects.filter(tutor=tutor, subject=subject)
-			if not relation.exists():
-				return Response({"tutor": "no object with such tutor and subject"}, status=status.HTTP_400_BAD_REQUEST)
-			relation.delete()
-			return Response({"subject_tutor": "deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+		try:
+			serializer = self.serializer_class(data=request.data)
+			if serializer.is_valid(raise_exception=True):
+				tutor = serializer.validated_data.get("tutor")
+				subject = serializer.validated_data.get("subject")
+				relation = SubjectTutor.objects.filter(tutor=tutor, subject=subject)
+				if not relation.exists():
+					return Response({"tutor": "no object with such tutor and subject"}, status=status.HTTP_400_BAD_REQUEST)
+				relation.delete()
+				return Response({"subject_tutor": "deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+			except Exception as e:
+				return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class VerifyEmail(APIView):
 	serializer_class = VerifyEmailSerializer
