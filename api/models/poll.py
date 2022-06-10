@@ -20,7 +20,7 @@ class Question(models.Model):
 
 class QuestionPoll(models.Model):
 	poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
-	question = models.ForeignKey(Question, null=True, on_delete=models.SET_NULL)
+	question = models.ForeignKey(Question, null=True, on_delete=models.CASCADE)
 	result = models.IntegerField(choices=CHOICES)
 
 
