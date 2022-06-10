@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authtoken.views import ObtainAuthToken
 from api.models import Student, Tutor, User
-from rest_framework.permissions import IsAuthenticated 
+from rest_framework.permissions import IsAuthenticated, AllowAny 
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.core.mail import send_mail
@@ -17,6 +17,7 @@ env = environ.Env()
 environ.Env.read_env()
 
 class Login(ObtainAuthToken):
+	permission_classes = (AllowAny,)
 	def post(self, request):
 		login_serializer = self.serializer_class(data=request.data, context = {'request': request})
 		if login_serializer.is_valid():
@@ -30,6 +31,7 @@ class Login(ObtainAuthToken):
 		return Response({'message': 'Username or password is incorrect'}, status=status.HTTP_401_UNAUTHORIZED)
 
 class Logout(APIView):
+	permission_classes = (AllowAny,)
 	serializer_class = LogoutSerializer
 	def post(self, request):
 		serializer = self.serializer_class(data=request.data)
@@ -42,6 +44,7 @@ class Logout(APIView):
 			return Response({"token": "Token successfully deleted"}, status=status.HTTP_200_OK)
 
 class ResetPasswordEmail(APIView):
+	permission_classes = (AllowAny,)
 	serializer_class = ResetPasswordEmailSerializer
 	def post(self, request):
 		serializer = self.serializer_class(data=request.data)
@@ -71,6 +74,7 @@ class ResetPasswordEmail(APIView):
 
 
 class ResetPasswordToken(APIView):
+	permission_classes = (AllowAny,)
 	serializer_class = ResetPasswordTokenSerializer
 	def post(self, request):
 		serializer = self.serializer_class(data=request.data)
