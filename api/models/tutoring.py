@@ -10,6 +10,8 @@ class Tutoring(models.Model):
 		PENDING = 'PE', 'Pending'
 		APPROVED = 'AP', 'Approved'
 		COMPLETED = 'CO', 'Completed'
+		CANCELED = 'CA', 'Canceled'
+		
 
 	tutor = models.ForeignKey(Tutor, null=True, on_delete=models.SET_NULL)
 	student = models.ForeignKey(Student, null=True, on_delete=models.SET_NULL)

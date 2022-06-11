@@ -14,6 +14,8 @@ class TutorViewSet(viewsets.ModelViewSet):
 	serializer_class = TutorRegisterSerializer
 	queryset = Tutor.objects.all()
 
+	filter_fields = ('registration_number')
+
 class TutorIsAccepted(GenericAPIView, UpdateModelMixin):
 	serializer_class = TutorIsAcceptedSerializer
 	queryset = Tutor.objects.all()

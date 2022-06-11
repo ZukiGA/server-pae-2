@@ -139,12 +139,16 @@ class ChangeTutoringLocation(GenericAPIView, UpdateModelMixin):
 	def put(self, request, *args, **kwargs):
 		return self.partial_update(request, *args, **kwargs)
 
-class ConfirmTutoring(APIView):
-    def post(self, request, *args, **kwargs):
+class UpdateTutoring(APIView):
+    def put(self, request, *args, **kwargs):
         pk = self.kwargs['pk']
+        status = self.kwargs['status']
         if not Tutoring.objects.filter(pk = pk).exists():
             return Response({"pk": "does not exist"}, status=status.HTTP_404_NOT_FOUND)
         tutoring = Tutoring.objects.filter(pk = pk).first()
-        tutoring.status = 'AP'
+
+        tutoring.status = status
         tutoring.save()
         return Response(TutoringSerializer(tutoring).data, status=status.HTTP_200_OK)
+
+
