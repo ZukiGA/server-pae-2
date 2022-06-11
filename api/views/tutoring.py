@@ -4,7 +4,7 @@ from api.models import Tutoring
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from api.models import Schedule, Tutor, Period, Tutoring
-from api.permissions import IsAdmin, IsAdminOrStudent, TutoringViewsetPermission
+from api.permissions import IsAdministrator, IsAdministratorOrStudent, TutoringViewsetPermission
 from api.serializers import TutoringSerializer, ParamsAvailableTutoringSerializer, AvailableTutoringSerializerList, AvailableTutoring
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import UpdateModelMixin
@@ -16,7 +16,7 @@ import datetime
 
 class AvailableTutorings(APIView):
     serializer_class = ParamsAvailableTutoringSerializer
-    permission_classes = (IsAdminOrStudent,)
+    permission_classes = (IsAdministratorOrStudent,)
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
@@ -78,7 +78,7 @@ class AvailableTutorings(APIView):
 
 class AlternateTutor(APIView):
     serializer_class = ParamsAlternateTutorSerializer
-    permission_classes = (IsAdmin,)
+    permission_classes = (IsAdministrator,)
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid(raise_exception=True):
@@ -125,7 +125,7 @@ class AlternateTutor(APIView):
 class ChangeTutor(GenericAPIView, UpdateModelMixin):
     serializer_class = ChangeTutorSerializer
     queryset = Tutoring.objects.all()
-    permission_classes = (IsAdmin,)
+    permission_classes = (IsAdministrator,)
     def put(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)
 
@@ -139,13 +139,13 @@ class TutoringViewSet(viewsets.ModelViewSet):
 class ChangeTutoringLocation(GenericAPIView, UpdateModelMixin):
     serializer_class = ChangeTutoringLocationSerializer
     queryset = Tutoring.objects.all()
-    permission_classes = (IsAdmin,)
+    permission_classes = (IsAdministrator,)
 
     def put(self, request, *args, **kwargs):
 	    return self.partial_update(request, *args, **kwargs)
 
 class ConfirmTutoring(APIView):
-    permission_classes = (IsAdmin,)
+    permission_classes = (IsAdministrator,)
     def post(self, request, *args, **kwargs):
         pk = self.kwargs['pk']
         if not Tutoring.objects.filter(pk = pk).exists():
