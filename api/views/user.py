@@ -22,6 +22,13 @@ class Login(ObtainAuthToken):
 		login_serializer = self.serializer_class(data=request.data, context = {'request': request})
 		if login_serializer.is_valid():
 			user = login_serializer.validated_data['user']
+			if user.is_tutor:
+				if not user.role_account.is_active:
+					return Response({"message": "you need to activate your account"}, status=status.HTTP_401_UNAUTHORIZED)
+				if not user.role_account.is_accepted:
+					return Response({"message": "your account has not been activated by the administratos"}, status=status.HTTP_401_UNAUTHORIZED)
+			if user.is_student and not user.role_account.is_active:
+				return Response({"message": "you need to activate your account"})
 			token, _ = Token.objects.get_or_create(user = user)
 			return Response({
 				'token': token.key,
@@ -83,7 +90,6 @@ class ResetPasswordToken(APIView):
 			ui64 = serializer.validated_data.get('ui64')
 			new_password = serializer.validated_data.get('new_password')
 			ui = smart_str(urlsafe_base64_decode(ui64))
-			print(ui)
 			if not User.objects.filter(unique_identifier=ui).exists():
 				return Response({"user": "No such user"}, status=status.HTTP_400_BAD_REQUEST)
 			user = User.objects.get(unique_identifier=ui)
