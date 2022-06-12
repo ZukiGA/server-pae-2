@@ -108,7 +108,7 @@ class TutorRegisterSerializer(serializers.ModelSerializer):
 
 	def validate_schedules(self, value):
 		MIN_SCHEDULES = 5
-		if len(value) >= MIN_SCHEDULES:
+		if not len(value) >= MIN_SCHEDULES:
 			raise serializers.ValidationError(f"The quantity of schedules must greater or equal to ${MIN_SCHEDULES}.")
 
 		for schedule in value:
@@ -122,7 +122,7 @@ class TutorRegisterSerializer(serializers.ModelSerializer):
 
 	def validate_subjects(self, value):
 		MIN_SUBJECTS = 1
-		if len(value) >= MIN_SUBJECTS:
+		if not len(value) >= MIN_SUBJECTS:
 			raise serializers.ValidationError(f"The quantity of subjects must be greater or equal to ${MIN_SUBJECTS}.")
 		return value
 
