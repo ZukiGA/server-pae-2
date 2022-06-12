@@ -94,6 +94,8 @@ class VerifyEmail(APIView):
 		if serializer.is_valid(raise_exception=True):
 			token = serializer.validated_data.get("token")
 			key = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+			if not User.objects.filter().exists():
+				return Response({"user": "user does not exist"})
 			user = User.objects.get(unique_identifier=key['user_id'])
 			tutor_or_student = user.role_account
 			if not tutor_or_student.is_active:
