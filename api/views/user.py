@@ -2,8 +2,8 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.permissions import IsAuthenticated, AllowAny 
 from api.models import Student, Tutor, User, Administrator
-from rest_framework.permissions import IsAuthenticated 
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.core.mail import send_mail
@@ -17,10 +17,18 @@ env = environ.Env()
 environ.Env.read_env()
 
 class Login(ObtainAuthToken):
+	permission_classes = (AllowAny,)
 	def post(self, request):
 		login_serializer = self.serializer_class(data=request.data, context = {'request': request})
 		if login_serializer.is_valid():
 			user = login_serializer.validated_data['user']
+			if user.is_tutor:
+				if not user.role_account.is_active:
+					return Response({"message": "you need to activate your account"}, status=status.HTTP_401_UNAUTHORIZED)
+				if not user.role_account.is_accepted:
+					return Response({"message": "your account has not been activated by the administratos"}, status=status.HTTP_401_UNAUTHORIZED)
+			if user.is_student and not user.role_account.is_active:
+				return Response({"message": "you need to activate your account"})
 			token, _ = Token.objects.get_or_create(user = user)
 			return Response({
 				'token': token.key,
@@ -30,6 +38,7 @@ class Login(ObtainAuthToken):
 		return Response({'message': 'Username or password is incorrect'}, status=status.HTTP_401_UNAUTHORIZED)
 
 class Logout(APIView):
+	permission_classes = (AllowAny,)
 	serializer_class = LogoutSerializer
 	def post(self, request):
 		serializer = self.serializer_class(data=request.data)
@@ -42,6 +51,7 @@ class Logout(APIView):
 			return Response({"token": "Token successfully deleted"}, status=status.HTTP_200_OK)
 
 class ResetPasswordEmail(APIView):
+	permission_classes = (AllowAny,)
 	serializer_class = ResetPasswordEmailSerializer
 	def post(self, request):
 		serializer = self.serializer_class(data=request.data)
@@ -74,6 +84,7 @@ class ResetPasswordEmail(APIView):
 
 
 class ResetPasswordToken(APIView):
+	permission_classes = (AllowAny,)
 	serializer_class = ResetPasswordTokenSerializer
 	def post(self, request):
 		serializer = self.serializer_class(data=request.data)
@@ -82,7 +93,6 @@ class ResetPasswordToken(APIView):
 			ui64 = serializer.validated_data.get('ui64')
 			new_password = serializer.validated_data.get('new_password')
 			ui = smart_str(urlsafe_base64_decode(ui64))
-			print(ui)
 			if not User.objects.filter(unique_identifier=ui).exists():
 				return Response({"user": "No such user"}, status=status.HTTP_400_BAD_REQUEST)
 			user = User.objects.get(unique_identifier=ui)

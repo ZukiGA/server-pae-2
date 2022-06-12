@@ -56,4 +56,12 @@ class PollSerializer(serializers.ModelSerializer):
 			visited_questions.add(pk_question)	
 		return value
 
+	def validate(self, data):
+		user = self.context['request'].user
+		if not user.is_student:
+			raise serializers.ValidationError({"user": "User must be a student"})
+		if not data.get('tutoring').student or not data.get('tutoring').student.user == self.context['request'].user:
+			raise serializers.ValidationError({"user": "This student cannot post this poll"})
+		return data
+
 
