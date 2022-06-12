@@ -20,6 +20,8 @@ class AdministratorSerializer(serializers.ModelSerializer):
 
 		user = User.objects.create_user(unique_identifier, validated_data['user']['password'])
 		user.is_administrator = True
+		if not Administrator.objects.filter().exists():
+			user.is_staff = True
 		user.save()
 		administrator = Administrator.objects.create(user=user, email=validated_data['email'], name=validated_data['name'], registration_number=validated_data['registration_number'])
 		return administrator

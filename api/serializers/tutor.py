@@ -101,9 +101,9 @@ class TutorRegisterSerializer(serializers.ModelSerializer):
 		return normalized_major
 
 	def validate_schedules(self, value):
-		# MIN_SCHEDULES = 5
-		# if len(value) >= MIN_SCHEDULES:
-		# 	raise serializers.ValidationError(f"The quantity of schedules must greater or equal to ${MIN_SCHEDULES}.")
+		MIN_SCHEDULES = 5
+		if len(value) >= MIN_SCHEDULES:
+			raise serializers.ValidationError(f"The quantity of schedules must greater or equal to ${MIN_SCHEDULES}.")
 
 		for schedule in value:
 			if schedule['period'] not in PERIOD_CHOICES:
