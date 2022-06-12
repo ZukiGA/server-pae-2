@@ -27,7 +27,7 @@ urlpatterns = [
 	path('tutorisaccepted/<pk>', views.TutorIsAccepted.as_view()),
 	path('pollresult/', views.PollResults.as_view()),
 	path('changetutoringlocation/<pk>', views.ChangeTutoringLocation.as_view()),
-	path('confirmtutoring/<pk>', views.ConfirmTutoring.as_view()),
+	path('updatetutoring/<pk>/<status>', views.UpdateTutoring.as_view()),
 	path('alternatetutor/', views.AlternateTutor.as_view()),
 	path('subjectbytutor/<tutor>', views.SubjectByTutorDetail.as_view()),
 	path('subjectbytutor/', views.SubjectByTutor.as_view()),
