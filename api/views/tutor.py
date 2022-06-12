@@ -16,7 +16,7 @@ class TutorViewSet(viewsets.ModelViewSet):
 	permission_classes = (StudentTutorPermission,)
 	serializer_class = TutorRegisterSerializer
 	queryset = Tutor.objects.all()
-	filter_fields = ('registration_number', 'email')
+	filter_fields = ('registration_number',)
 
 class TutorIsAccepted(GenericAPIView, UpdateModelMixin):
 	permission_classes = (IsAdministrator,)
