@@ -13,7 +13,6 @@ from server.settings import SECRET_KEY
 class TutorViewSet(viewsets.ModelViewSet):
 	serializer_class = TutorRegisterSerializer
 	queryset = Tutor.objects.all()
-
 	filter_fields = ('registration_number', 'email')
 
 class TutorIsAccepted(GenericAPIView, UpdateModelMixin):
