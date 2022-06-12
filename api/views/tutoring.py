@@ -1,7 +1,7 @@
 from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from api.models import Tutoring
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from api.models import Schedule, Tutor, Period, Tutoring
 from api.permissions import IsAdministrator, IsAdministratorOrStudent, TutoringViewsetPermission
@@ -16,7 +16,7 @@ import datetime
 
 class AvailableTutorings(APIView):
     serializer_class = ParamsAvailableTutoringSerializer
-    permission_classes = (IsAdministratorOrStudent,)
+    permission_classes = (AllowAny,)
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)

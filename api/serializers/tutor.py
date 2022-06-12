@@ -30,6 +30,13 @@ class SubjectSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Subject
 		fields = ('code', 'name', 'semester')
+	
+	def validate_code(self, value):
+		if len(value) < 7:
+			raise serializers.ValidationError("code must be greater than 7 ")
+		if len(value) > 8:
+			raise serializers.ValidationError("code must be less than 8")
+		return value
 
 class ScheduleSerializer(serializers.ModelSerializer):
 	class Meta:

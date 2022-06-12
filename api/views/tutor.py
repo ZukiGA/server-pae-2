@@ -99,10 +99,5 @@ class VerifyEmail(APIView):
 			if not tutor_or_student.is_active:
 				tutor_or_student.is_active = True
 				tutor_or_student.save()
-				token, _ = Token.objects.get_or_create(user = user)
-				return Response({
-					'token': token.key,
-					'user': user.role_account.name,
-					'message': "Successful login" 
-				}, status=status.HTTP_201_CREATED)
+				return Response({'message': "user is now active"}, status=status.HTTP_201_CREATED)
 			return Response({"token": "invalid token"}, status=status.HTTP_400_BAD_REQUEST)
