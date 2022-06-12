@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authtoken.views import ObtainAuthToken
-from api.models import Student, Tutor, User
+from api.models import Student, Tutor, User, Administrator
 from rest_framework.permissions import IsAuthenticated 
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
@@ -57,9 +57,12 @@ class ResetPasswordEmail(APIView):
 				if not Tutor.objects.filter(email=email).exists():
 					return Response({"email": 'There is no tutor with such email'}, status=status.HTTP_400_BAD_REQUEST)
 				user = Tutor.objects.get(email=email).user
+			elif user_type == 2:
+				if not Administrator.objects.filter(email=email).exists():
+					return Response({"email": 'There is no administrator with such email'}, status=status.HTTP_400_BAD_REQUEST)
+				user = Administrator.objects.get(email=email).user
 			else:
 				return Response({"user_type": "No such user type"}, status=status.HTTP_400_BAD_REQUEST)
-		# 	#TODO Admin
 
 			ui64 = urlsafe_base64_encode(smart_bytes(user.unique_identifier))
 			token = PasswordResetTokenGenerator().make_token(user)
