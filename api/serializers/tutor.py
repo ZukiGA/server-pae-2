@@ -75,8 +75,7 @@ class TutorRegisterSerializer(serializers.ModelSerializer):
 		print("token", access_token)
 		relative_link = "activate-account/?" + "token=" + str(access_token)
 		url = env('FRONTEND_URL') + relative_link
-		# send_mail("Activa tu cuenta", "Activar cuenta", None, [validated_data["email"]], html_message=f'<a href="{url}">Activar cuenta</a>')
-		send_mail("Activa tu cuenta", "Activar cuenta", None, ["a01731065@tec.mx"], html_message=f'<a href="{url}">Activar cuenta</a>')
+		send_mail("Activa tu cuenta", "Activar cuenta", None, [validated_data["email"]], html_message=f'<a href="{url}">Activar cuenta</a>')
 
 		return tutor
 
@@ -115,9 +114,9 @@ class TutorRegisterSerializer(serializers.ModelSerializer):
 		return value
 
 	def validate_subjects(self, value):
-		# MIN_SUBJECTS = 10
-		# if len(value) >= MIN_SUBJECTS:
-		# 	raise serializers.ValidationError(f"The quantity of subjects must be greater or equal to ${MIN_SUBJECTS}.")
+		MIN_SUBJECTS = 1
+		if len(value) >= MIN_SUBJECTS:
+			raise serializers.ValidationError(f"The quantity of subjects must be greater or equal to ${MIN_SUBJECTS}.")
 		return value
 
 	def validate(self, data):
