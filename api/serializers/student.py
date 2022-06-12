@@ -39,8 +39,7 @@ class StudentRegisterSerializer(serializers.ModelSerializer):
 		print("token", access_token)
 		relative_link = "activate-account/?" + "token=" + str(access_token)
 		url = env('FRONTEND_URL') + relative_link
-		# send_mail("Activa tu cuenta", "Activar cuenta", None, [validated_data["email"]], html_message=f'<a href="{url}">Activar cuenta</a>')
-		send_mail("Activa tu cuenta", "Activar cuenta", None, ["a01731065@tec.mx"], html_message=f'<a href="{url}">Activar cuenta</a>')
+		send_mail("Activa tu cuenta", "Activar cuenta", None, [validated_data["email"]], html_message=f'<a href="{url}">Activar cuenta</a>')
 
 		return student 
 
