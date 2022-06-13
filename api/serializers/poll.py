@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from api.models import Question, QuestionPoll, Poll, Tutor
+from api.models.tutoring import Tutoring
 
 class TutorPollSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -42,6 +43,10 @@ class PollSerializer(serializers.ModelSerializer):
 		poll = Poll.objects.create(tutoring=validated_data['tutoring'], comment=validated_data['comment'])
 		for question_poll in question_poll_data:
 			QuestionPoll.objects.create(poll=poll, **question_poll)
+		print(validated_data['tutoring'])
+		tutoring = validated_data['tutoring']
+		tutoring.status = "CO"
+		tutoring.save()
 		return poll
 
 	def validate_question_polls(self, value):

@@ -53,7 +53,7 @@ class TutorRegisterSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Tutor
-		fields = ('user', 'registration_number', 'email', 'name', 'major', 'completed_hours', 'schedules', 'subjects', 'is_active', 'is_accepted')
+		fields = ('user', 'registration_number', 'email', 'name', 'major', 'completed_hours', 'weekly_completed_hours', 'schedules', 'subjects', 'is_active', 'is_accepted')
 		read_only_fields = ('completed_hours', 'registration_number', 'is_active', 'is_accepted',)
 
 
