@@ -24,6 +24,7 @@ class Tutoring(models.Model):
 	topic = models.CharField(max_length=255)
 	doubt = models.TextField(null=True)
 	file = models.ImageField('images', upload_to=upload_to, null=True)
+	has_feeback = models.BooleanField(default=False)
 
 class Period(models.Model):
     beginning_first_period = models.DateField()
