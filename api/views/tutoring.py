@@ -138,25 +138,24 @@ class TutoringViewSet(viewsets.ModelViewSet):
     filter_fields = ('status','student', 'tutor')
 
 class ChangeTutoringLocation(GenericAPIView, UpdateModelMixin):
-    serializer_class = ChangeTutoringLocationSerializer
-    queryset = Tutoring.objects.all()
-    permission_classes = (IsAdministrator,)
-
-    def put(self, request, *args, **kwargs):
-	    return self.partial_update(request, *args, **kwargs)
+	serializer_class = ChangeTutoringLocationSerializer
+	queryset = Tutoring.objects.all()
+	permission_classes = (IsAdministrator,)
+	def put(self, request, *args, **kwargs):
+		return self.partial_update(request, *args, **kwargs)
 
 class UpdateTutoring(APIView):
-    def formatEmail(self):
-        return f"<html style=''><html lang='es'><head><meta charset='UTF-8'><link rel='preconnect' href='https://fonts.googleapis.com'><link rel='preconnect' href='https://fonts.gstatic.com' crossorigin><link href='https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap' rel='stylesheet'></head><body style='margin: 0;padding: 0;font-family:Montserrat, sans-serif;box-sizing:border-box; justify-content:center;align-items:center; background:#8f91a2;'><div class='oxxo-pay' style='height: auto;max-width:550px;background: #fff;padding: 50px 50px 10px 50px;margin: 0 auto;'><div class='oxxo-header' style='background-image: url('./logo.ico');background-repeat:no-repeat;height:60px;background-position:center;background-size:contain;'></div><h4 style='text-align:center;font-weight:300;font-size:20px; padding-bottom:20px;border-bottom: 2px solid rgba(74, 74, 74, 0.25);'>PAE</h4><h1 style='font-size:30px;text-align:center;padding:30px;color:#545b65;font-weight:600;'>Notificación de asesoría solicitada</h1><div class='box' style='background:rgba(211,192,179,.4);margin-top:30px;padding:35px;justify-content: space-between;flex-direction:column;align-items:center;font-size: 14px;color:#545b65;'><p style='text-align:center;'>Accede a tu cuenta y revisa el estado de la asesoría.</p> </div><div class='summary' style='width:100%;margin-top:45px;margin-bottom:45px;justify-content:center;align-items:center;text-align:center;flex-direction:column;'><div class='summary_header' style='margin-bottom:20px;height:auto;flex-direction:column;justify-content:center;align-items:center;text-align:center;'></div></div><footer><p style='margin-bottom:4px;font-size:14px;text-align:center'> © PAE 2021. Desarrollado por Hacket</p></footer></div></body></html>"
-    def put(self, request, *args, **kwargs):
-        permission_classes = (IsAdministrator,)
-        pk = self.kwargs['pk']
-        stat = self.kwargs['status']
-        if not Tutoring.objects.filter(pk = pk).exists():
-            return Response({"pk": "does not exist"}, status=status.HTTP_404_NOT_FOUND)
-        tutoring = Tutoring.objects.filter(pk = pk).first()
+	def formatEmail(self):
+		return f"<html style=''><html lang='es'><head><meta charset='UTF-8'><link rel='preconnect' href='https://fonts.googleapis.com'><link rel='preconnect' href='https://fonts.gstatic.com' crossorigin><link href='https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap' rel='stylesheet'></head><body style='margin: 0;padding: 0;font-family:Montserrat, sans-serif;box-sizing:border-box; justify-content:center;align-items:center; background:#8f91a2;'><div class='oxxo-pay' style='height: auto;max-width:550px;background: #fff;padding: 50px 50px 10px 50px;margin: 0 auto;'><div class='oxxo-header' style='background-image: url('./logo.ico');background-repeat:no-repeat;height:60px;background-position:center;background-size:contain;'></div><h4 style='text-align:center;font-weight:300;font-size:20px; padding-bottom:20px;border-bottom: 2px solid rgba(74, 74, 74, 0.25);'>PAE</h4><h1 style='font-size:30px;text-align:center;padding:30px;color:#545b65;font-weight:600;'>Notificación de asesoría solicitada</h1><div class='box' style='background:rgba(211,192,179,.4);margin-top:30px;padding:35px;justify-content: space-between;flex-direction:column;align-items:center;font-size: 14px;color:#545b65;'><p style='text-align:center;'>Accede a tu cuenta y revisa el estado de la asesoría.</p> </div><div class='summary' style='width:100%;margin-top:45px;margin-bottom:45px;justify-content:center;align-items:center;text-align:center;flex-direction:column;'><div class='summary_header' style='margin-bottom:20px;height:auto;flex-direction:column;justify-content:center;align-items:center;text-align:center;'></div></div><footer><p style='margin-bottom:4px;font-size:14px;text-align:center'> © PAE 2021. Desarrollado por Hacket</p></footer></div></body></html>"
+	def put(self, request, *args, **kwargs):
+	permission_classes = (IsAdministrator,)
+	pk = self.kwargs['pk']
+	stat = self.kwargs['status']
+	if not Tutoring.objects.filter(pk = pk).exists():
+		return Response({"pk": "does not exist"}, status=status.HTTP_404_NOT_FOUND)
+	tutoring = Tutoring.objects.filter(pk = pk).first()
 	send_mail("Notifiación de cambios en asesorías", "Accede a tu cuenta de PAE", None, [tutoring.student.email], html_message=formatEmail())
 	send_mail("Notifiación de cambios en asesorías", "Accede a tu cuenta de PAE", None, [tutoring.tutor.email], html_message=formatEmail())
-        tutoring.status = stat
-        tutoring.save()
-        return Response(TutoringSerializer(tutoring).data, status=status.HTTP_200_OK)
+	tutoring.status = stat
+	tutoring.save()
+	return Response(TutoringSerializer(tutoring).data, status=status.HTTP_200_OK)
