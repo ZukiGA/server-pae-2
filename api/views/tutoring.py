@@ -107,7 +107,7 @@ class AlternateTutor(APIView):
             #get schedule for such tutors
             schedules_tutors = Schedule.objects.filter(tutor__in=tutors_with_subject, period=current_period, hour=hour, day_week=day_week)
 
-            tutors_with_schedule = Tutor.objects.filter(schedule__in=schedules_tutors).order_by("completed_hours").reverse()
+            tutors_with_schedule = Tutor.objects.filter(schedule__in=schedules_tutors)
 
             #removes tutors with a tutoring in such date and hour
             tutoring_same_time = Tutoring.objects.filter(date=date, hour=hour)
