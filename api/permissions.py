@@ -38,7 +38,7 @@ class TutoringViewsetPermission(BasePermission):
 
 class AdministratorViewsetPermission(BasePermission):
 	def has_permission(self, request, view):
-		if not Administrator.objects.filter().exists:
+		if not Administrator.objects.filter().exists():
 			return True
 		if not request.user.is_authenticated or not request.user.is_administrator:
 			return False
