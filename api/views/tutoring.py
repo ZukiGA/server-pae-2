@@ -27,7 +27,7 @@ class AvailableTutorings(APIView):
             final_date_serializer = serializer.validated_data.get("final_date_serializer")
 
             # find tutors with that subject
-            tutors_with_subject = Tutor.objects.filter(subjecttutor__subject=subject).order_by("completed_hours").reverse()
+            tutors_with_subject = Tutor.objects.filter(subjecttutor__subject=subject)
             # retrieve schedules
             schedules_tutors = Schedule.objects.filter(tutor__in=tutors_with_subject)
             #it gets the start and end dates of the period
