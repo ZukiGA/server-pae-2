@@ -46,6 +46,7 @@ class PollSerializer(serializers.ModelSerializer):
 		print(validated_data['tutoring'])
 		tutoring = validated_data['tutoring']
 		tutoring.status = "CO"
+		tutoring.has_feeback = True
 		tutoring.save()
 		return poll
 
