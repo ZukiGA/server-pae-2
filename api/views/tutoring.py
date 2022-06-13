@@ -59,7 +59,7 @@ class AvailableTutorings(APIView):
 
                     #creates possible tutorings with the schedules and the dates in this period
                     for schedule in schedules_tutors:
-                        if schedule.period == current_period+1:
+                        if schedule.period == current_period:
                             for date_in_period in days_by_week[schedule.day_week]:
                                 available_tutorings[date_in_period].append(AvailableTutoring(hour=schedule.hour, period=schedule.period, tutor=schedule.tutor, isOnline=True))
                                 # TODO: validate tutor and student are not the same person
