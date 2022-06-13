@@ -123,4 +123,14 @@ class ChangePassword(APIView):
 			user.set_password(new_password)
 			user.save()
 			return  Response({"message": "password changed successfully"}, status=status.HTTP_200_OK)
+
+class IsUserAuthenticated(APIView):
+	serializer_class = LogoutSerializer
+	def post(self, request):
+		serializer = self.serializer_class(data=request.data)
+		if serializer.is_valid(raise_exception=True):
+			token = serializer.validated_data.get('token')
+			if Token.objects.filter(key = token).exists():
+				return Response({"message": "user is authenticated"}, status=status.HTTP_200_OK)
+			return Response({"message": "no such token"}, status=status.HTTP_200_OK)
 	

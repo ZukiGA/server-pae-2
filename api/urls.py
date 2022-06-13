@@ -32,7 +32,8 @@ urlpatterns = [
 	path('subjectbytutor/<tutor>', views.SubjectByTutorDetail.as_view()),
 	path('subjectbytutor/', views.SubjectByTutor.as_view()),
 	path('changetutor/<pk>', views.ChangeTutor.as_view()),
-	path('modifyschedule/', views.ModifySchedule.as_view())
+	path('modifyschedule/', views.ModifySchedule.as_view()),
+	path('isauthenticated/', views.IsUserAuthenticated.as_view())
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
