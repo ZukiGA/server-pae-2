@@ -138,12 +138,11 @@ class TutoringViewSet(viewsets.ModelViewSet):
     filter_fields = ('status','student', 'tutor')
 
 class ChangeTutoringLocation(GenericAPIView, UpdateModelMixin):
-    serializer_class = ChangeTutoringLocationSerializer
-    queryset = Tutoring.objects.all()
-    permission_classes = (IsAdministrator,)
-
-    def put(self, request, *args, **kwargs):
-	    return self.partial_update(request, *args, **kwargs)
+	serializer_class = ChangeTutoringLocationSerializer
+	queryset = Tutoring.objects.all()
+	permission_classes = (IsAdministrator,)
+	def put(self, request, *args, **kwargs):
+		return self.partial_update(request, *args, **kwargs)
 
 class UpdateTutoring(APIView):
     def put(self, request, *args, **kwargs):
@@ -157,12 +156,7 @@ class UpdateTutoring(APIView):
         tutoring = Tutoring.objects.filter(pk = pk).first()
 
 		send_mail("Notifiación de cambios en asesorías", "Accede a tu cuenta de PAE", None, [tutoring.student.email], html_message=formatEmail())
-
 		send_mail("Notifiación de cambios en asesorías", "Accede a tu cuenta de PAE", None, [tutoring.tutor.email], html_message=formatEmail())
-        tutoring.status = stat
-        
-        tutoring.save()
-        
-        return Response(TutoringSerializer(tutoring).data, status=status.HTTP_200_OK)
-
-
+		tutoring.status = stat
+		tutoring.save()
+		return Response(TutoringSerializer(tutoring).data, status=status.HTTP_200_OK)
